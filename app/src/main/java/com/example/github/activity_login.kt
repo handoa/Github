@@ -1,5 +1,6 @@
 package com.example.github
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -21,7 +22,13 @@ class MainActivity : AppCompatActivity() {
         idEditText = findViewById(R.id.idEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
 
+        joinButton.setOnClickListener {
+            // 회원가입 창으로 이동
+            val intent = Intent(this@MainActivity, SignupActivity::class.java)
+            startActivity(intent)
 
 
+
+        }
     }
 }

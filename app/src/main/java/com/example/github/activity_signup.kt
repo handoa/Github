@@ -12,6 +12,7 @@ class SignupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
 
+
         val editTextID: EditText = findViewById(R.id.editTextID)
         val editTextPassword: EditText = findViewById(R.id.editTextPassword)
         val editTextName: EditText = findViewById(R.id.editTextName)
@@ -23,6 +24,8 @@ class SignupActivity : AppCompatActivity() {
             val password = editTextPassword.text.toString()
             val name = editTextName.text.toString()
             val contact = editTextContact.text.toString()
+
+
 
 
 
