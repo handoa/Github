@@ -64,34 +64,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         storageRef = FirebaseStorage.getInstance().reference.child("images")
         imageView = findViewById(R.id.imageView)  // ImageView 초기화
+
         //val btnChooseImage: Button = findViewById(R.id.btnChooseImage)
-        toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar) //액티비티의 앱바로 지정
-
-        //날씨 정보 클릭 시 날씨화면으로 이동
-        weatherView.setOnClickListener {
-            var intentToWeatherPage = Intent(this, activity_weatherPage::class.java)
-            startActivity(intentToWeatherPage)
-        }
-
-        //실시간 날씨 토크 클릭 시 실시간 날씨 정보 공유 화면으로 이동
-        /*realtimeTalk.setOnClickListener {
-            var intentToRealtimeTalk = Intent(this, activity_realtimeTalk::class.java)
-            startActivity(intentToRealtimeTalk)
-        }*/
-
-        //작년 입은 옷 사진 클릭 시 이동
-        myCloset.setOnClickListener {
-            var intentToMyCloset = Intent(this, activity_myCloset::class.java)
-            startActivity(intentToMyCloset)
-        }
-
-        //ootd 사진 클릭 시 이동
-        ootd.setOnClickListener {
-            var intentToOotd = Intent(this, activity_ootd::class.java)
-            startActivity(intentToOotd)
-        }
-
 
         fun checkGalleryPermission(): Boolean {
             return ContextCompat.checkSelfPermission(
@@ -214,6 +188,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
 
 
     }
