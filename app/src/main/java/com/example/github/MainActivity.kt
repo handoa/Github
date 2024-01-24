@@ -36,9 +36,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        storageRef = FirebaseStorage.getInstance().reference.child("images")
+        val storageRef = FirebaseStorage.getInstance().reference.child("images")
 
-        //val btnChooseImage: Button = findViewById(R.id.btnChooseImage)
+
 
         fun checkGalleryPermission(): Boolean {
             return ContextCompat.checkSelfPermission(
@@ -109,7 +109,6 @@ class MainActivity : AppCompatActivity() {
     private fun uploadSelectedImageToFirebase(selectedImageUri: Uri) {
         GlobalScope.launch(Dispatchers.IO) {
             // Firebase에 이미지 업로드를 수행
-            firebaseStorageHelper.uploadImageToFirebase(selectedImageUri)
         }
     }
 
@@ -122,7 +121,7 @@ class MainActivity : AppCompatActivity() {
             GlobalScope.launch(Dispatchers.IO) {
                 selectedImageUri?.let {
 
-                    firebaseStorageHelper.uploadImageToFirebase(it)
+                    FirebaseStorageHelper.uploadImageToFirebase(it)
                 }
             }
         }
@@ -137,20 +136,20 @@ class MainActivity : AppCompatActivity() {
         private const val TEMP_IMG_REMOVE_INTERVAL = 24 * 60 * 60 * 1000L // 24 hours
         }
 
-    /* private fun checkPermissions(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
 
-    }*/
 
 
     }
 
 
 
+    private fun checkPermissions(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
 
+    }
 
 
 
