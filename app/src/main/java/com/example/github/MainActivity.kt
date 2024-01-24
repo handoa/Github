@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //메뉴 리소시 XML의 내용을 앱바(App Bar)에 반영
+    //메뉴 리소스 XML의 내용을 앱바(App Bar)에 반영
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.toolbar_menu, menu)
@@ -203,18 +203,17 @@ class MainActivity : AppCompatActivity() {
             GlobalScope.launch(Dispatchers.IO) {
                 selectedImageUri?.let {
 
-                    /*val imageUrl = firebaseStorageHelper.uploadImageToFirebase(it)
+                    val imageUrl = firebaseStorageHelper.uploadImageToFirebase(it)
                     withContext(Dispatchers.Main) {
                         imageUrl?.let { url ->
                             Glide.with(this@MainActivity)
                                 .load(url)
                                 .into(imageView)
                         }
-                    }*/
+                    }
                 }
             }
         }
-
 
 
     }
