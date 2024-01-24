@@ -128,29 +128,11 @@ class MainActivity : AppCompatActivity() {
     private val firebaseStorageHelper = FirebaseStorageHelper()
 
     // 이미지 선택 후 업로드를 수행할 부분
-
     private fun uploadSelectedImageToFirebase(selectedImageUri: Uri) {
         GlobalScope.launch(Dispatchers.IO) {
-            try {
-                // Firebase에 이미지 업로드를 수행하고 업로드된 이미지의 URL을 받아옴
-                val imageUrl = firebaseStorageHelper.uploadImageToFirebase(selectedImageUri)
-
-                // 업로드된 이미지의 URL을 메인 스레드로 전달하여 UI 업데이트
-                withContext(Dispatchers.Main) {
-                    imageUrl?.let { url ->
-                        // Glide를 사용하여 업로드된 이미지의 URL을 이미지뷰에 표시
-                        Glide.with(this@MainActivity)
-                            .load(url)
-                            .into(imageView)
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                // 예외 처리: 업로드 실패 등의 상황에 대한 처리를 여기에 추가가능
-            }
+            // Firebase에 이미지 업로드를 수행
         }
     }
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -158,11 +140,23 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == PICK_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val selectedImageUri = data?.data
-            selectedImageUri?.let {
-                // 이미지를 업로드하는 함수 호출
-                uploadSelectedImageToFirebase(it)
+            GlobalScope.launch(Dispatchers.IO) {
+                selectedImageUri?.let {
+
+                    val imageUrl = firebaseStorageHelper.uploadImageToFirebase(it)
+                    withContext(Dispatchers.Main) {
+                        imageUrl?.let { url ->
+                            Glide.with(this@MainActivity)
+                                .load(url)
+                                .into(imageView)
+                        }
+                    }
+                }
             }
         }
+
+
+
     }
 }
 
