@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <!--갤러리 -->
+    <!-- 갤러리 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!-- 날씨 API 가져오기 -->
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 날씨 API 가져오기 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <meta-data
+        android:name="API_KEY"
+        android:value="${API_KEY" />
 
     <application
         android:allowBackup="true"
@@ -23,7 +29,21 @@
         android:theme="@style/Theme.Github"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <activity
+            android:name=".activity_myPage"
+            android:exported="false" />
+        <activity
+            android:name=".activity_realtimeTalk"
+            android:exported="false" />
+        <activity
+            android:name=".activity_ootd"
+            android:exported="false" />
+        <activity
+            android:name=".activity_myCloset"
+            android:exported="false" />
+        <activity
+            android:name=".activity_weatherPage"
+            android:exported="false" />
         <activity
             android:name=".data.ModelWeather"
             android:exported="false" />
@@ -42,11 +62,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
     </application>
-    <meta-data
-        android:name="API_KEY"
-        android:value="${API_KEY" />
 
 </manifest>
