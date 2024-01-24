@@ -30,30 +30,21 @@ import java.util.*
 import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.withContext
 
-
 class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val REQUEST_PERMISSION_CODE = 123
         private const val PICK_IMAGE_REQUEST_CODE = 456
-        private const val IMG_MIME_TYPE = "image/*"
-        private const val REQUEST_IMAGE_CAPTURE = 1
-        private const val REQUEST_PERMISSION = 2
-        private const val TEMP_IMG_REMOVE_INTERVAL = 24 * 60 * 60 * 1000L // 24 hours
     }
 
     private lateinit var storageRef: StorageReference
-    private var mCameraPhotoPath: Uri? = null
-    private lateinit var imageView: ImageView  // 이미지를 표시할 ImageView 추가
-
+    private lateinit var imageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         storageRef = FirebaseStorage.getInstance().reference.child("images")
-        imageView = findViewById(R.id.imageView)  // ImageView 초기화
-
-        //val btnChooseImage: Button = findViewById(R.id.btnChooseImage)
+        imageView = findViewById(R.id.imageView)
 
         fun checkGalleryPermission(): Boolean {
             return ContextCompat.checkSelfPermission(
@@ -62,7 +53,6 @@ class MainActivity : AppCompatActivity() {
             ) == PackageManager.PERMISSION_GRANTED
         }
 
-        // 권한을 요청하는 함수
         fun requestGalleryPermission() {
             ActivityCompat.requestPermissions(
                 this,
@@ -71,23 +61,18 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        // 권한 확인 및 갤러리 열기
         if (checkPermissions()) {
             findViewById<Button>(R.id.btnChooseImage).setOnClickListener {
                 checkGalleryPermission()
                 openGallery()
             }
         } else {
-            // 권한이 없는 경우 권한 요청
             requestGalleryPermission()
-            /*ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQUEST_PERMISSION_CODE
-            )*/
         }
-    }
 
+        // Load image for last year
+        loadImageForLastYear()
+    }
 
     private fun checkPermissions(): Boolean {
         return ContextCompat.checkSelfPermission(
@@ -101,15 +86,12 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(intent, PICK_IMAGE_REQUEST_CODE)
     }
 
-
     inner class FirebaseStorageHelper {
         private val storage = FirebaseStorage.getInstance()
         private val storageRef = storage.reference
 
         fun uploadImageToFirebase(selectedImageUri: Uri): Uri? {
             val imageRef = storageRef.child("images/${UUID.randomUUID()}.jpg")
-
-            //val uploadTask = imageRef.putFile(selectedImageUri)
 
             return try {
                 val uploadTask = imageRef.putFile(selectedImageUri)
@@ -121,19 +103,47 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-    }
-
-
-    private val firebaseStorageHelper = FirebaseStorageHelper()
-
-    // 이미지 선택 후 업로드를 수행할 부분
-    private fun uploadSelectedImageToFirebase(selectedImageUri: Uri) {
-        GlobalScope.launch(Dispatchers.IO) {
-            // Firebase에 이미지 업로드를 수행
+        suspend fun getImageUrlForDate(date: String): Uri? {
+            return try {
+                val imageRef = storageRef.child("images/image_$date.jpg")
+                val url = Tasks.await(imageRef.downloadUrl)
+                url
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
     }
 
+    private val firebaseStorageHelper = FirebaseStorageHelper()
+
+    private fun uploadSelectedImageToFirebase(selectedImageUri: Uri) {
+        GlobalScope.launch(Dispatchers.IO) {
+            firebaseStorageHelper.uploadImageToFirebase(selectedImageUri)
+        }
+    }
+
+    private fun getOneYearAgoDate(): String {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.YEAR, -1)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(calendar.time)
+    }
+
+    private val lastYearDate = getOneYearAgoDate()
+
+    private fun loadImageForLastYear() {
+        GlobalScope.launch(Dispatchers.IO) {
+            val imageUrl = firebaseStorageHelper.getImageUrlForDate(lastYearDate)
+            withContext(Dispatchers.Main) {
+                imageUrl?.let { url ->
+                    Glide.with(this@MainActivity)
+                        .load(url)
+                        .into(imageView)
+                }
+            }
+        }
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -142,28 +152,9 @@ class MainActivity : AppCompatActivity() {
             val selectedImageUri = data?.data
             GlobalScope.launch(Dispatchers.IO) {
                 selectedImageUri?.let {
-
-                    val imageUrl = firebaseStorageHelper.uploadImageToFirebase(it)
-                    withContext(Dispatchers.Main) {
-                        imageUrl?.let { url ->
-                            Glide.with(this@MainActivity)
-                                .load(url)
-                                .into(imageView)
-                        }
-                    }
+                    uploadSelectedImageToFirebase(it)
                 }
             }
         }
-
-
-
     }
 }
-
-
-
-
-
-
-
-
