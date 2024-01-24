@@ -1,5 +1,6 @@
 package com.example.github
 
+import com.bumptech.glide.Glide
 import android.Manifest
 import android.app.Activity
 import android.content.ContentValues
@@ -34,6 +35,8 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import com.google.android.gms.tasks.Tasks
+import kotlinx.coroutines.withContext
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -163,7 +166,7 @@ class MainActivity : AppCompatActivity() {
         private val storage = FirebaseStorage.getInstance()
         private val storageRef = storage.reference
 
-        suspend fun uploadImageToFirebase(selectedImageUri: Uri): Uri? {
+        fun uploadImageToFirebase(selectedImageUri: Uri): Uri? {
             val imageRef = storageRef.child("images/${UUID.randomUUID()}.jpg")
 
             //val uploadTask = imageRef.putFile(selectedImageUri)
