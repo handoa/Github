@@ -20,6 +20,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.github.network.DisplayImageActivity
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.Dispatchers
@@ -83,8 +84,8 @@ class activity_myCloset : AppCompatActivity() {
     }
 
     companion object {
-        private const val REQUEST_PERMISSION_CODE = 123
-        private const val PICK_IMAGE_REQUEST_CODE = 456
+        internal const val REQUEST_PERMISSION_CODE = 123
+        internal const val PICK_IMAGE_REQUEST_CODE = 456
     }
 
     private lateinit var storageRef: StorageReference
@@ -149,19 +150,24 @@ class activity_myCloset : AppCompatActivity() {
 
     private val lastYearDate = getOneYearAgoDate()
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == PICK_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == activity_myCloset.Companion.PICK_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val selectedImageUri = data?.data
             GlobalScope.launch(Dispatchers.IO) {
                 selectedImageUri?.let {
-                    uploadSelectedImageToFirebase(it)
+                    val url=uploadSelectedImageToFirebase(it)
+                    val intent = Intent(this@activity_myCloset, DisplayImageActivity::class.java)
+                    intent.putExtra("image_url", url.toString())
+                    startActivity(intent)
                 }
             }
         }
     }
+
+
+
 }
 
 
