@@ -34,14 +34,17 @@ import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.withContext
 
 class activity_myCloset : AppCompatActivity() {
+    lateinit var toolbar: Toolbar
+    lateinit var actionBar: ActionBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_closet)
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        toolbar= findViewById(R.id.toolbar)
         setSupportActionBar(toolbar) //액티비티의 앱바로 지정
-        val actionbar: ActionBar = supportActionBar!!
-        actionbar.setDisplayHomeAsUpEnabled(true) //뒤로가기 버튼 만들기
+        actionBar = supportActionBar!!
+        actionBar.setDisplayHomeAsUpEnabled(true) //뒤로가기 버튼 만들기
+
         storageRef = FirebaseStorage.getInstance().reference.child("images")
         imageView = findViewById(R.id.imageView)
         fun checkGalleryPermission(): Boolean {
@@ -74,7 +77,7 @@ class activity_myCloset : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId){
-            androidx.appcompat.R.id.home -> {
+            android.R.id.home -> {
                 //뒤로가기 눌렀을 때
                 finish()
                 return true

@@ -4,9 +4,18 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#6750A3"
+    android:background="@color/white"
     app:menu="@menu/toolbar_menu"
-    app:title="@string/app_name"
-    app:titleTextColor="@color/white">
+    app:titleTextAppearance="@style/TextAppearance.AppCompat.Large">
+
+    <TextView
+        android:id="@+id/toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
 </androidx.appcompat.widget.Toolbar>

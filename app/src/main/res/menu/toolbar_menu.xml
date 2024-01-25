@@ -5,7 +5,7 @@
     <item
         android:id="@+id/toolbar_myPage"
         android:enabled="true"
-        android:icon="@drawable/baseline_account_circle_24"
+        android:icon="@drawable/myaccount"
         android:title="myPage"
         app:showAsAction="always" />
 

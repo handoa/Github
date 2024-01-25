@@ -27,6 +27,7 @@
         android:theme="@style/Theme.Github"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <activity
             android:name=".activity_myPage"
             android:exported="false" />

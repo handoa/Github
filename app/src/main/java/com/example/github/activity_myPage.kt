@@ -7,20 +7,22 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 
 class activity_myPage : AppCompatActivity() {
+    lateinit var toolbar: Toolbar
+    lateinit var actionBar: ActionBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_closet)
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        toolbar= findViewById(R.id.toolbar)
         setSupportActionBar(toolbar) //액티비티의 앱바로 지정
-        val actionbar: ActionBar = supportActionBar!!
-        actionbar.setDisplayHomeAsUpEnabled(true) //뒤로가기 버튼 만들기
+        actionBar = supportActionBar!!
+        actionBar.setDisplayHomeAsUpEnabled(true) //뒤로가기 버튼 만들기
 
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId){
-            androidx.appcompat.R.id.home -> {
+            android.R.id.home -> {
                 //뒤로가기 눌렀을 때
                 finish()
                 return true

@@ -19,6 +19,7 @@ import android.view.MenuItem
 import android.webkit.WebView
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -46,8 +47,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var storageRef: StorageReference
     private lateinit var imageView: ImageView
-    lateinit var weatherView: WebView
-    //lateinit var realtimeTalk : RecyclerView
+    private lateinit var weatherView: WebView
+    lateinit var realtimeTalk : TextView
     lateinit var toolbar: Toolbar
     lateinit var myCloset: ImageView
     lateinit var ootd: ImageView
@@ -55,6 +56,38 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        toolbar = findViewById(R.id.include)
+        setSupportActionBar(toolbar) //액티비티의 앱바로 지정
+
+        weatherView = findViewById(R.id.weatherView)
+        realtimeTalk = findViewById(R.id.realtimeTalk)
+        myCloset = findViewById(R.id.imageView_myCloset)
+        ootd = findViewById(R.id.imageView_ootd)
+
+        //날씨 정보 클릭 시 날씨화면으로 이동
+        weatherView?.setOnClickListener {
+            var intentToWeatherPage = Intent(this, activity_weatherPage::class.java)
+            startActivity(intentToWeatherPage)
+        }
+
+        //실시간 날씨 토크 클릭 시 실시간 날씨 정보 공유 화면으로 이동
+        realtimeTalk.setOnClickListener {
+            var intentToRealtimeTalk = Intent(this, activity_realtimeTalk::class.java)
+            startActivity(intentToRealtimeTalk)
+        }
+
+        //작년 입은 옷 사진 클릭 시 이동
+        myCloset.setOnClickListener {
+            var intentToMyCloset = Intent(this, activity_myCloset::class.java)
+            startActivity(intentToMyCloset)
+        }
+
+        //ootd 사진 클릭 시 이동
+        ootd.setOnClickListener {
+            var intentToOotd = Intent(this, activity_ootd::class.java)
+            startActivity(intentToOotd)
+        }
     }
 
     //메뉴 리소스 XML의 내용을 앱바(App Bar)에 반영
@@ -64,11 +97,6 @@ class MainActivity : AppCompatActivity() {
         //return super.onCreateOptionsMenu(menu)
         return true
     }
-
-    //앱바(App Bar)에 표시된 액션 또는 오버플로우 메뉴가 선택되면
-    //액티비티의 onOptionsItemSelected() 메소드가 호출
-
-
 
     private fun uploadSelectedImageToFirebase(selectedImageUri: Uri) {
         GlobalScope.launch(Dispatchers.IO) {
@@ -85,13 +113,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //앱바(App Bar)에 표시된 액션 또는 오버플로우 메뉴가 선택되면
+    //액티비티의 onOptionsItemSelected() 메소드가 호출
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId){
             R.id.toolbar_myPage -> {
                 //마이페이지 아이콘 눌렀을 때
                 Toast.makeText(applicationContext, "마이페이지 이동", Toast.LENGTH_LONG).show()
-                //var intentToMyPage = Intent(this, activity_myPage::class.java)
-                //startActivity(intentToMyPage)
+                var intentToMyPage = Intent(this, activity_myPage::class.java)
+                startActivity(intentToMyPage)
                 return super.onOptionsItemSelected(item)
             }
         }
