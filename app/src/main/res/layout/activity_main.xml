@@ -26,7 +26,7 @@
 
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/codiImage"
         android:layout_width="0dp"
         android:layout_height="100dp"
         android:layout_marginLeft="20dp"
@@ -49,12 +49,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2">
+        app:layout_constraintTop_toBottomOf="@+id/codiImage">
 
         <TextView
             android:id="@+id/realtimeTalk"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="실시간 날씨 정보" />
 

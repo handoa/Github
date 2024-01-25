@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         ootd = findViewById(R.id.imageView_ootd)
 
         //날씨 정보 클릭 시 날씨화면으로 이동
-        weatherView?.setOnClickListener {
+        weatherView.setOnClickListener {
             var intentToWeatherPage = Intent(this, activity_weatherPage::class.java)
             startActivity(intentToWeatherPage)
         }
