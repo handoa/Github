@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.github.network.DisplayImageActivity
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.Dispatchers
@@ -66,6 +67,24 @@ class MainActivity : AppCompatActivity() {
 
     //앱바(App Bar)에 표시된 액션 또는 오버플로우 메뉴가 선택되면
     //액티비티의 onOptionsItemSelected() 메소드가 호출
+
+
+
+    private fun uploadSelectedImageToFirebase(selectedImageUri: Uri) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val imageUrl = firebaseStorageHelper.uploadImageToFirebase(selectedImageUri)
+            withContext(Dispatchers.Main) {
+
+                imageUrl?.let { url ->
+                    // Glide를 사용하여 이미지를 로딩하고 imageView에 표시
+                    Glide.with(this@MainActivity)
+                        .load(url)
+                        .into(imageView)
+                }
+            }
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId){
             R.id.toolbar_myPage -> {
@@ -130,6 +149,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
 
     }

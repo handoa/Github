@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -52,7 +53,7 @@ android {
 }
 
 fun getApiKey(propertyKey: String): String {
-    return gradleLocalProperties(rootDir).getProperty(propertyKey)
+   return gradleLocalProperties(rootDir).getProperty(propertyKey)
 }
 
     dependencies {
