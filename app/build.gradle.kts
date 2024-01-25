@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -10,6 +12,10 @@ android {
     compileSdk = 33
 
     defaultConfig {
+        //api key 변수 지정
+        buildConfigField("String", "API_KEY", getApiKey("api.key"))
+        //url 변수 지정
+        buildConfigField("String", "URL_WEATHER", getApiKey("url.weather"))
         applicationId = "com.example.github"
         minSdk = 24
         targetSdk = 33
@@ -45,6 +51,10 @@ android {
     }
 }
 
+fun getApiKey(propertyKey: String): String {
+    return gradleLocalProperties(rootDir).getProperty(propertyKey)
+}
+
     dependencies {
 
         implementation("androidx.core:core-ktx:1.9.0")
@@ -59,7 +69,7 @@ android {
         implementation("com.google.firebase:firebase-analytics")
         implementation("androidx.constraintlayout:constraintlayout:2.1.4")
         implementation("com.google.code.gson:gson:2.9.0")
-    // retrofit2
+        // retrofit2
         implementation("com.squareup.retrofit2:retrofit:2.9.0")
         implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
@@ -68,5 +78,7 @@ android {
         testImplementation("junit:junit:4.13.2")
         androidTestImplementation("androidx.test.ext:junit:1.1.5")
         androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    }
+
+        }
+
 

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class ModelWeather (
     @SerializedName("rainType") var rainType: String = "",      // 강수 형태
     @SerializedName("humidity") var humidity: String = "",      // 습도
-    @SerializedName("sky") var sky: String = "",           // 하능 상태
+    @SerializedName("sky") var sky: String = "",           // 하늘 상태
     @SerializedName("temp") var temp: String = "",          // 기온
     @SerializedName("fcstTime") var fcstTime: String = "",      // 예보시각
 )

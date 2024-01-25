@@ -43,10 +43,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val REQUEST_PERMISSION_CODE = 123
         private const val PICK_IMAGE_REQUEST_CODE = 456
-        private const val IMG_MIME_TYPE = "image/*"
-        private const val REQUEST_IMAGE_CAPTURE = 1
-        private const val REQUEST_PERMISSION = 2
-        private const val TEMP_IMG_REMOVE_INTERVAL = 24 * 60 * 60 * 1000L // 24 hours
     }
 
     private lateinit var storageRef: StorageReference
@@ -63,9 +59,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         storageRef = FirebaseStorage.getInstance().reference.child("images")
-        imageView = findViewById(R.id.imageView)  // ImageView 초기화
-
-        //val btnChooseImage: Button = findViewById(R.id.btnChooseImage)
+        imageView = findViewById(R.id.imageView)
 
         fun checkGalleryPermission(): Boolean {
             return ContextCompat.checkSelfPermission(
@@ -90,14 +84,11 @@ class MainActivity : AppCompatActivity() {
                 openGallery()
             }
         } else {
-            // 권한이 없는 경우 권한 요청
             requestGalleryPermission()
-            /*ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQUEST_PERMISSION_CODE
-            )*/
         }
+
+        // Load image for last year
+        loadImageForLastYear()
     }
 
     //메뉴 리소스 XML의 내용을 앱바(App Bar)에 반영
@@ -135,15 +126,12 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(intent, PICK_IMAGE_REQUEST_CODE)
     }
 
-
     inner class FirebaseStorageHelper {
         private val storage = FirebaseStorage.getInstance()
         private val storageRef = storage.reference
 
         fun uploadImageToFirebase(selectedImageUri: Uri): Uri? {
             val imageRef = storageRef.child("images/${UUID.randomUUID()}.jpg")
-
-            //val uploadTask = imageRef.putFile(selectedImageUri)
 
             return try {
                 val uploadTask = imageRef.putFile(selectedImageUri)
@@ -164,10 +152,25 @@ class MainActivity : AppCompatActivity() {
     // 이미지 선택 후 업로드를 수행할 부분
     private fun uploadSelectedImageToFirebase(selectedImageUri: Uri) {
         GlobalScope.launch(Dispatchers.IO) {
-            // Firebase에 이미지 업로드를 수행
+            firebaseStorageHelper.uploadImageToFirebase(selectedImageUri)
         }
     }
 
+
+    private val lastYearDate = getOneYearAgoDate()
+
+    private fun loadImageForLastYear() {
+        GlobalScope.launch(Dispatchers.IO) {
+            val imageUrl = firebaseStorageHelper.getImageUrlForDate(lastYearDate)
+            withContext(Dispatchers.Main) {
+                imageUrl?.let { url ->
+                    Glide.with(this@MainActivity)
+                        .load(url)
+                        .into(imageView)
+                }
+            }
+        }
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -176,21 +179,10 @@ class MainActivity : AppCompatActivity() {
             val selectedImageUri = data?.data
             GlobalScope.launch(Dispatchers.IO) {
                 selectedImageUri?.let {
-
-                    val imageUrl = firebaseStorageHelper.uploadImageToFirebase(it)
-                    withContext(Dispatchers.Main) {
-                        imageUrl?.let { url ->
-                            Glide.with(this@MainActivity)
-                                .load(url)
-                                .into(imageView)
-                        }
-                    }
+                    uploadSelectedImageToFirebase(it)
                 }
             }
         }
-
-
-
     }
 }
 

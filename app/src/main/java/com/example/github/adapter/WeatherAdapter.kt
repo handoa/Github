@@ -101,7 +101,7 @@ class WeatherAdapter (var items : Array<ModelWeather>) : RecyclerView.Adapter<We
         // 하늘 상태
         return when(sky) {
             "1" -> R.drawable.sun                       // 맑음
-            "3" ->  R.drawable.cloudy                     // 구름 많음
+            "3" -> R.drawable.cloudy                     // 구름 많음
             "4" -> R.drawable.blur                 // 흐림
             else -> R.drawable.ic_launcher_foreground   // 오류
         }

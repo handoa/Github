@@ -1,14 +1,13 @@
 package com.example.github.network
 
+import com.example.github.BuildConfig
 import com.example.github.data.WEATHER
-import com.google.firebase.BuildConfig
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 // 결과 xml 파일에 접근해서 정보 가져오기
 interface WeatherInterface {
-    // getUltraSrtFcst : 초단기 예보 조회 + 인증키
     @GET(BuildConfig.API_KEY)
     fun getWeather(
         @Query("numOfRows") num_of_rows: Int,   // 한 페이지 경과 수
