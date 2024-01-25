@@ -24,7 +24,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.Dispatchers
@@ -37,7 +36,6 @@ import java.util.*
 import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.withContext
 
-
 class MainActivity : AppCompatActivity() {
 
     companion object {
@@ -46,49 +44,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var storageRef: StorageReference
-    private var mCameraPhotoPath: Uri? = null
-    private lateinit var imageView: ImageView  // 이미지를 표시할 ImageView 추가
+    private lateinit var imageView: ImageView
     lateinit var weatherView: WebView
     //lateinit var realtimeTalk : RecyclerView
     lateinit var toolbar: Toolbar
     lateinit var myCloset: ImageView
     lateinit var ootd: ImageView
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        storageRef = FirebaseStorage.getInstance().reference.child("images")
-        imageView = findViewById(R.id.imageView)
-
-        fun checkGalleryPermission(): Boolean {
-            return ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-        }
-
-        // 권한을 요청하는 함수
-        fun requestGalleryPermission() {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQUEST_PERMISSION_CODE
-            )
-        }
-
-        // 권한 확인 및 갤러리 열기
-        if (checkPermissions()) {
-            findViewById<Button>(R.id.btnChooseImage).setOnClickListener {
-                checkGalleryPermission()
-                openGallery()
-            }
-        } else {
-            requestGalleryPermission()
-        }
-
-        // Load image for last year
-        loadImageForLastYear()
     }
 
     //메뉴 리소스 XML의 내용을 앱바(App Bar)에 반영
@@ -114,18 +79,14 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun checkPermissions(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
+    private fun getOneYearAgoDate(): String {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.YEAR, -1)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(calendar.time)
     }
 
-    private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, PICK_IMAGE_REQUEST_CODE)
-    }
-
+    private val lastYearDate = getOneYearAgoDate()
     inner class FirebaseStorageHelper {
         private val storage = FirebaseStorage.getInstance()
         private val storageRef = storage.reference
@@ -143,21 +104,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-    }
-
-
-    private val firebaseStorageHelper = FirebaseStorageHelper()
-
-    // 이미지 선택 후 업로드를 수행할 부분
-    private fun uploadSelectedImageToFirebase(selectedImageUri: Uri) {
-        GlobalScope.launch(Dispatchers.IO) {
-            firebaseStorageHelper.uploadImageToFirebase(selectedImageUri)
+        suspend fun getImageUrlForDate(date: String): Uri? {
+            return try {
+                val imageRef = storageRef.child("images/image_$date.jpg")
+                val url = Tasks.await(imageRef.downloadUrl)
+                url
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
     }
 
-
-    private val lastYearDate = getOneYearAgoDate()
+    private val firebaseStorageHelper = FirebaseStorageHelper()
 
     private fun loadImageForLastYear() {
         GlobalScope.launch(Dispatchers.IO) {
@@ -172,24 +131,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == PICK_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val selectedImageUri = data?.data
-            GlobalScope.launch(Dispatchers.IO) {
-                selectedImageUri?.let {
-                    uploadSelectedImageToFirebase(it)
-                }
-            }
-        }
     }
-}
-
-
-
-
-
-
-
 

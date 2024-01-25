@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity_myCloset">
+    tools:context=".activity_myCloset"
+    >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -16,5 +17,28 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="작년에는 이렇게 입었어요"
         app:titleTextColor="@color/white"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/img240124" /><!-- 나중에 실제 이미지로 변경 -->
+        <!-- android:contentDescription="@string/image_description"-->
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnChooseImage" />
+    <Button
+        android:id="@+id/btnChooseImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose Image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <!--app:layout_constraintTop_toBottomOf="@+id/imageView2" -->
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
