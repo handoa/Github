@@ -19,6 +19,7 @@ import android.view.MenuItem
 import android.webkit.WebView
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -47,8 +48,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var storageRef: StorageReference
     private lateinit var imageView: ImageView
-    private lateinit var weatherView: WebView
-    lateinit var realtimeTalk : TextView
+    private lateinit var weatherView: Button
+    lateinit var realtimeTalk : LinearLayout
     lateinit var toolbar: Toolbar
     lateinit var myCloset: ImageView
     lateinit var ootd: ImageView
@@ -59,10 +60,12 @@ class MainActivity : AppCompatActivity() {
 
         toolbar = findViewById(R.id.include)
         setSupportActionBar(toolbar) //액티비티의 앱바로 지정
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         weatherView = findViewById(R.id.weatherView)
         realtimeTalk = findViewById(R.id.realtimeTalk)
         myCloset = findViewById(R.id.imageView_myCloset)
+        myCloset.clipToOutline = true
         ootd = findViewById(R.id.imageView_ootd)
 
         //날씨 정보 클릭 시 날씨화면으로 이동

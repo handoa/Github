@@ -1,84 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <include
         android:id="@+id/include"
         layout="@layout/toolbar" />
 
-
-    <WebView
-        android:id="@+id/weatherView"
-        android:layout_width="0dp"
-        android:layout_height="130dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="8dp"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="20dp"
+        android:layout_marginBottom="4dp"
+        android:text="서울, 양재동"
+        android:textColor="#8A8484" />
+
+
+    <Button
+        android:id="@+id/weatherView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="4"
+        android:background="@drawable/round_shape"
+        app:layout_constraintBottom_toTopOf="@id/codiImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include">
 
-    </WebView>
+    </Button>
 
 
     <ImageView
         android:id="@+id/codiImage"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="20dp"
+        android:layout_marginBottom="4dp"
+        android:layout_weight="1"
         android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@id/realtimeTalk"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/weatherView"
-        app:srcCompat="@drawable/img_line" />
+        app:srcCompat="@drawable/temper" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="20dp"
+        android:layout_marginBottom="6dp"
+        android:layout_weight="6"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/codiImage">
 
-        <TextView
+        <LinearLayout
             android:id="@+id/realtimeTalk"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="실시간 날씨 정보" />
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="2"
+            android:background="@drawable/round_shape"
+            android:orientation="horizontal">
 
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1.2"
+                android:src="@drawable/baseline_chat_24" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="5"
+                android:orientation="vertical"
+                android:paddingLeft="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_weight="1"
+                    android:text="지금 눈오고 너무 추움.."
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="와!! 추워!!!!!"
+                    android:textColor="#8A8484"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="오늘 눈 오니까 다들 우산 챙겨!"
+                    android:textColor="#8A8484"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="0dp"
+            android:layout_weight="5"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/imageView_myCloset"
-                android:layout_width="185dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/strock_black"
+                android:clipToOutline="true"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/img" />
+                app:srcCompat="@drawable/mycloset" />
+
 
             <ImageView
                 android:id="@+id/imageView_ootd"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="1"
+                android:background="@drawable/strock_black"
+                android:clipToOutline="true"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/img" />
+                app:srcCompat="@drawable/mycloset" />
+
         </LinearLayout>
+
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
