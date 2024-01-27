@@ -40,43 +40,16 @@ class activity_myCloset : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_closet)
 
-        toolbar= findViewById(R.id.toolbar)
+        toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar) //액티비티의 앱바로 지정
         actionBar = supportActionBar!!
         actionBar.setDisplayHomeAsUpEnabled(true) //뒤로가기 버튼 만들기
-
-        storageRef = FirebaseStorage.getInstance().reference.child("images")
-        imageView = findViewById(R.id.imageView)
-        fun checkGalleryPermission(): Boolean {
-            return ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-        }
-
-        fun requestGalleryPermission() {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQUEST_PERMISSION_CODE
-            )
-        }
-
-        if (checkPermissions()) {
-            findViewById<Button>(R.id.btnChooseImage).setOnClickListener {
-                checkGalleryPermission()
-                openGallery()
-            }
-        } else {
-            requestGalleryPermission()
-        }
-
 
 
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item?.itemId){
+        when (item?.itemId) {
             android.R.id.home -> {
                 //뒤로가기 눌렀을 때
                 finish()
@@ -85,98 +58,7 @@ class activity_myCloset : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-    companion object {
-        internal const val REQUEST_PERMISSION_CODE = 123
-        internal const val PICK_IMAGE_REQUEST_CODE = 456
-    }
-
-    private lateinit var storageRef: StorageReference
-    private lateinit var imageView: ImageView
-
-
-    private fun checkPermissions(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, PICK_IMAGE_REQUEST_CODE)
-    }
-
-    inner class FirebaseStorageHelper {
-        private val storage = FirebaseStorage.getInstance()
-        private val storageRef = storage.reference
-
-        fun uploadImageToFirebase(selectedImageUri: Uri): Uri? {
-            val imageRef = storageRef.child("images/${UUID.randomUUID()}.jpg")
-
-            return try {
-                val uploadTask = imageRef.putFile(selectedImageUri)
-                Tasks.await(uploadTask)
-                imageRef.downloadUrl.result
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            }
-        }
-
-        suspend fun getImageUrlForDate(date: String): Uri? {
-            return try {
-                val imageRef = storageRef.child("images/image_$date.jpg")
-                val url = Tasks.await(imageRef.downloadUrl)
-                url
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            }
-        }
-    }
-
-    private val firebaseStorageHelper = FirebaseStorageHelper()
-
-    private fun uploadSelectedImageToFirebase(selectedImageUri: Uri) {
-        GlobalScope.launch(Dispatchers.IO) {
-            firebaseStorageHelper.uploadImageToFirebase(selectedImageUri)
-        }
-    }
-
-    private fun getOneYearAgoDate(): String {
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.YEAR, -1)
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return dateFormat.format(calendar.time)
-    }
-
-    private val lastYearDate = getOneYearAgoDate()
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == activity_myCloset.Companion.PICK_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val selectedImageUri = data?.data
-            GlobalScope.launch(Dispatchers.IO) {
-                selectedImageUri?.let {
-                    val url=uploadSelectedImageToFirebase(it)
-                    val intent = Intent(this@activity_myCloset, DisplayImageActivity::class.java)
-                    intent.putExtra("image_url", url.toString())
-                    startActivity(intent)
-                }
-            }
-        }
-    }
-
-
-
 }
-
-
-
-
-
 
 
 

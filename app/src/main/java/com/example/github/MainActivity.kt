@@ -14,6 +14,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.webkit.WebView
@@ -40,14 +41,7 @@ import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
-
-    companion object {
-        private const val REQUEST_PERMISSION_CODE = 123
-        private const val PICK_IMAGE_REQUEST_CODE = 456
-    }
-
-    private lateinit var storageRef: StorageReference
-    private lateinit var imageView: ImageView
+    private lateinit var iv: ImageView
     private lateinit var weatherView: Button
     lateinit var realtimeTalk : LinearLayout
     lateinit var toolbar: Toolbar
@@ -91,6 +85,19 @@ class MainActivity : AppCompatActivity() {
             var intentToOotd = Intent(this, activity_ootd::class.java)
             startActivity(intentToOotd)
         }
+
+        checkSelfPermission()
+
+        iv = findViewById(R.id.imageView_myCloset)
+        iv.setOnClickListener {
+            val intent = Intent().apply {
+                type = MediaStore.Images.Media.CONTENT_TYPE
+                action = Intent.ACTION_GET_CONTENT
+            }
+            startActivityForResult(intent, 101)
+        }
+
+
     }
 
     //메뉴 리소스 XML의 내용을 앱바(App Bar)에 반영
@@ -101,20 +108,6 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    private fun uploadSelectedImageToFirebase(selectedImageUri: Uri) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val imageUrl = firebaseStorageHelper.uploadImageToFirebase(selectedImageUri)
-            withContext(Dispatchers.Main) {
-
-                imageUrl?.let { url ->
-                    // Glide를 사용하여 이미지를 로딩하고 imageView에 표시
-                    Glide.with(this@MainActivity)
-                        .load(url)
-                        .into(imageView)
-                }
-            }
-        }
-    }
 
     //앱바(App Bar)에 표시된 액션 또는 오버플로우 메뉴가 선택되면
     //액티비티의 onOptionsItemSelected() 메소드가 호출
@@ -131,60 +124,52 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun getOneYearAgoDate(): String {
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.YEAR, -1)
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return dateFormat.format(calendar.time)
-    }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-    private val lastYearDate = getOneYearAgoDate()
-    inner class FirebaseStorageHelper {
-        private val storage = FirebaseStorage.getInstance()
-        private val storageRef = storage.reference
-
-        fun uploadImageToFirebase(selectedImageUri: Uri): Uri? {
-            val imageRef = storageRef.child("images/${UUID.randomUUID()}.jpg")
-
-            return try {
-                val uploadTask = imageRef.putFile(selectedImageUri)
-                Tasks.await(uploadTask)
-                imageRef.downloadUrl.result
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            }
-        }
-
-        suspend fun getImageUrlForDate(date: String): Uri? {
-            return try {
-                val imageRef = storageRef.child("images/image_$date.jpg")
-                val url = Tasks.await(imageRef.downloadUrl)
-                url
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            }
-        }
-    }
-
-    private val firebaseStorageHelper = FirebaseStorageHelper()
-
-    private fun loadImageForLastYear() {
-        GlobalScope.launch(Dispatchers.IO) {
-            val imageUrl = firebaseStorageHelper.getImageUrlForDate(lastYearDate)
-            withContext(Dispatchers.Main) {
-                imageUrl?.let { url ->
-                    Glide.with(this@MainActivity)
-                        .load(url)
-                        .into(imageView)
+        if (requestCode == 1) {
+            grantResults.indices.forEach { i ->
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("MainActivity", "권한 허용: ${permissions[i]}")
                 }
             }
         }
     }
 
+    private fun checkSelfPermission() {
+        val permissionsNeeded = mutableListOf<String>()
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+
+        if (permissionsNeeded.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionsNeeded.toTypedArray(), 1)
+        } else {
+            Toast.makeText(this, "권한을 모두 허용", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 101 && resultCode == RESULT_OK) {
+            try {
+                val inputStream = data?.data?.let { contentResolver.openInputStream(it) }
+                val bitmap = BitmapFactory.decodeStream(inputStream)
+                inputStream?.close()
+                iv.setImageBitmap(bitmap)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        } else if (requestCode == 101 && resultCode == RESULT_CANCELED) {
+            Toast.makeText(this, "취소", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     }
 
