@@ -38,6 +38,8 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        buildConfig = true
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -47,9 +49,6 @@ android {
         jvmTarget = "1.8"
     }
 
-    buildFeatures{
-        buildConfig = true
-    }
 }
 
 fun getApiKey(propertyKey: String): String {
@@ -63,7 +62,7 @@ fun getApiKey(propertyKey: String): String {
         implementation("com.google.android.material:material:1.8.0")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
         implementation("com.github.bumptech.glide:glide:4.12.0")
-        //implementation("com.google.android.gms:play-services-auth:17.0.1")
+        //implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
         annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
         implementation("com.google.firebase:firebase-storage:20.3.0")
         implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
@@ -79,6 +78,7 @@ fun getApiKey(propertyKey: String): String {
         testImplementation("junit:junit:4.13.2")
         androidTestImplementation("androidx.test.ext:junit:1.1.5")
         androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
 
         }
 

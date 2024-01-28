@@ -17,6 +17,7 @@ import android.graphics.Point
 import android.os.Build
 import android.os.Looper
 import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.github.adapter.WeatherAdapter
 import com.example.github.component.Common
 import com.example.github.data.ITEM
@@ -52,6 +53,12 @@ class MainActivity2 : AppCompatActivity() {
         // 권한 요청
         ActivityCompat.requestPermissions(this@MainActivity2, permissionList, 1)
 
+        // RecyclerView에 어댑터 연결
+        val weatherAdapter = WeatherAdapter(emptyArray()) // 초기에 빈 배열 또는 기본값으로 어댑터 설정
+        binding.weatherRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.weatherRecyclerView.adapter = weatherAdapter
+
+
 
         // 오늘 날짜 텍스트뷰 설정
         binding.tvDate.text = SimpleDateFormat("MM월 dd일", Locale.getDefault()).format(Calendar.getInstance().time) + "날씨"
@@ -61,6 +68,9 @@ class MainActivity2 : AppCompatActivity() {
         // <새로고침> 버튼 누를 때 위치 정보 & 날씨 정보 다시 가져오기
         binding.btnRefresh.setOnClickListener {
             requestLocation()
+
+            // 날씨 정보를 가져와서 어댑터에 설정
+            setWeather(curPoint!!.x, curPoint!!.y)
         }
 
 
