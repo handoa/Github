@@ -5,11 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 
-class LoginActivity : AppCompatActivity() {
-
+class activity_login : AppCompatActivity() {
     lateinit var loginButton: Button
-    lateinit var joinButton: Button
+    lateinit var joinTextView: TextView
     lateinit var idEditText: EditText
     lateinit var passwordEditText: EditText
 
@@ -18,7 +18,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         loginButton = findViewById(R.id.loginButton)
-        joinButton = findViewById(R.id.joinButton)
+        joinTextView = findViewById(R.id.joinTextView)
         idEditText = findViewById(R.id.idEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
 
@@ -29,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         //회원가입 버튼 클릭 시 회원가입 페이지로 이동
-        joinButton.setOnClickListener {
+        joinTextView.setOnClickListener {
             var intentToSignup = Intent(this, SignupActivity::class.java)
             startActivity(intentToSignup)
         }

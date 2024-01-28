@@ -1,5 +1,6 @@
 package com.example.github
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -13,21 +14,20 @@ class SignupActivity : AppCompatActivity() {
         setContentView(R.layout.activity_signup)
 
 
-        val editTextID: EditText = findViewById(R.id.editTextID)
-        val editTextPassword: EditText = findViewById(R.id.editTextPassword)
-        val editTextName: EditText = findViewById(R.id.editTextName)
-        val editTextContact: EditText = findViewById(R.id.editTextContact)
-        val buttonSignUp: Button = findViewById(R.id.buttonSignUp)
+        val newId: EditText = findViewById(R.id.new_id)
+        val newPw: EditText = findViewById(R.id.new_pw)
+        val newName: EditText = findViewById(R.id.new_name)
+        val newTel: EditText = findViewById(R.id.new_tel)
+        val btnSignup: Button = findViewById(R.id.btnSignup)
 
-        buttonSignUp.setOnClickListener {
-            val id = editTextID.text.toString()
-            val password = editTextPassword.text.toString()
-            val name = editTextName.text.toString()
-            val contact = editTextContact.text.toString()
+        btnSignup.setOnClickListener {
+            val id = newId.text.toString()
+            val password = newPw.text.toString()
+            val name = newName.text.toString()
+            val contact = newTel.text.toString()
 
-
-
-
+            var intent = Intent(this, activity_login::class.java)
+            startActivity(intent)
 
             val message = "ID: $id\nPassword: $password\nName: $name\nContact: $contact"
             Toast.makeText(this@SignupActivity, message, Toast.LENGTH_SHORT).show()
