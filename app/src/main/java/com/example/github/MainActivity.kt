@@ -75,10 +75,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         //작년 입은 옷 사진 클릭 시 이동
-        /*myCloset.setOnClickListener {
+        myCloset.setOnClickListener {
             var intentToMyCloset = Intent(this, activity_myCloset::class.java)
             startActivity(intentToMyCloset)
-        }*/
+        }
 
         //ootd 사진 클릭 시 이동
         ootd.setOnClickListener {

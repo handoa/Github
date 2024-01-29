@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "979306253565",
-    "project_id": "clothes-38128",
-    "storage_bucket": "clothes-38128.appspot.com"
+    "project_number": "256881393956",
+    "project_id": "guru2-8724d",
+    "storage_bucket": "guru2-8724d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:979306253565:android:a409e0d67d0db131f84294",
+        "mobilesdk_app_id": "1:256881393956:android:a6aa5da6b5b82ca512f3b1",
         "android_client_info": {
           "package_name": "com.example.github"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA5t9wYNBgBU6ZBxLWRgjT9ljhdwEXbDBQ"
+          "current_key": "AIzaSyBdkZgFTFEHl5TlG9YcfY_wvF2LMYyR3nE"
         }
       ],
       "services": {
