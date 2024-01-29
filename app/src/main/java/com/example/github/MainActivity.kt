@@ -41,7 +41,7 @@ import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var iv: ImageView
+   // private lateinit var iv: ImageView
     private lateinit var weatherView: Button
     lateinit var realtimeTalk : LinearLayout
     lateinit var toolbar: Toolbar
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intentToOotd)
         }
 
-        checkSelfPermission()
+       /* checkSelfPermission()
 
         iv = findViewById(R.id.imageView_myCloset)
         iv.setOnClickListener {
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 action = Intent.ACTION_GET_CONTENT
             }
             startActivityForResult(intent, 101)
-        }
+        }*/
 
 
     }
@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == 1) {
@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
         } else if (requestCode == 101 && resultCode == RESULT_CANCELED) {
             Toast.makeText(this, "취소", Toast.LENGTH_SHORT).show()
         }
-    }
+    }*/
 
     }
 
