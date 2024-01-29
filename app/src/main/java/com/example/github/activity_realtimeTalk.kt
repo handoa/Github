@@ -11,7 +11,7 @@ class activity_realtimeTalk : AppCompatActivity() {
     lateinit var actionBar: ActionBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_my_closet)
+        setContentView(R.layout.activity_realtime_talk)
 
         toolbar= findViewById(R.id.toolbar)
         setSupportActionBar(toolbar) //액티비티의 앱바로 지정
