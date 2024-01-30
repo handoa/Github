@@ -27,30 +27,29 @@ class SignupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
 
-        val newId: EditText = findViewById(R.id.new_id)
-        val newPw: EditText = findViewById(R.id.new_pw)
-        val newName: EditText = findViewById(R.id.new_name)
-        val newTel: EditText = findViewById(R.id.new_tel)
-        val btnSignup: Button = findViewById(R.id.btnSignup)
-
         auth = Firebase.auth
+        newId = findViewById(R.id.new_id)
+        newPw = findViewById(R.id.new_pw)
+        newName = findViewById(R.id.new_name)
+        newTel = findViewById(R.id.new_tel)
+        btnSignup = findViewById(R.id.btnSignup)
 
-        btnSignup.setOnClickListener {
-            createAccount(newId.text.toString(), newPw.text.toString())
+        initializeView()
+        initializeListener()
 
-            val id = newId.text.toString()
-            val password = newPw.text.toString()
-            val name = newName.text.toString()
-            val tel = newTel.text.toString()
-
-            var intent = Intent(this, activity_login::class.java)
-            startActivity(intent)
-
-            /*val message = "ID: $id\nPassword: $password\nName: $name\nContact: $contact"
-            Toast.makeText(this@SignupActivity, message, Toast.LENGTH_SHORT).show()*/
-        }
     }
 
+    //뷰 초기화
+    fun initializeView(){
+        auth = FirebaseAuth.getInstance()
+    }
+
+    //버튼 클릭 시 리스너 초기화
+    fun initializeListener(){
+        btnSignup.setOnClickListener() {
+            createAccount(newId.text.toString(), newPw.text.toString())
+        }
+    }
 
     //회원가입 함수
     fun createAccount(id: String, password: String) {
