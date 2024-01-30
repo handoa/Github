@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
@@ -28,13 +29,14 @@ class activity_myPage : AppCompatActivity() {
 
         auth = Firebase.auth
         btnLogout = findViewById(R.id.btnLogout)
-        FirebaseAuth.getInstance().signOut()
 
         //로그아웃 버튼 클릭 시 로그아웃 후 로그인 페이지로 이동
         btnLogout.setOnClickListener {
-            getUid()
+            FirebaseAuth.getInstance().signOut()
             var intentToLogin = Intent(this, activity_login::class.java)
+            intentToLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intentToLogin)
+            Toast.makeText(this, "로그아웃 완료", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -49,7 +51,7 @@ class activity_myPage : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun getUid(): String {
+   /* fun getUid(): String { //firebase에서 uid를 가져옴
         return auth.currentUser?.uid.toString()
-    }
+    }*/
 }

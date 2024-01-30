@@ -43,7 +43,7 @@
         android:background="@drawable/login_shape"
         android:ems="10"
         android:hint="    이메일"
-        android:inputType="text"
+        android:inputType="text|textEmailAddress"
         android:minHeight="48dp"
         android:textColorHint="#AEAEAE"
         app:layout_constraintBottom_toTopOf="@+id/passwordEditText"

@@ -17,7 +17,7 @@ import com.google.firebase.ktx.Firebase
 class SignupActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    lateinit var newId: EditText
+    lateinit var newEmail: EditText
     lateinit var newPw: EditText
     lateinit var newName: EditText
     lateinit var newTel: EditText
@@ -28,7 +28,7 @@ class SignupActivity : AppCompatActivity() {
         setContentView(R.layout.activity_signup)
 
         auth = Firebase.auth
-        newId = findViewById(R.id.new_id)
+        newEmail = findViewById(R.id.new_email)
         newPw = findViewById(R.id.new_pw)
         newName = findViewById(R.id.new_name)
         newTel = findViewById(R.id.new_tel)
@@ -47,24 +47,23 @@ class SignupActivity : AppCompatActivity() {
     //버튼 클릭 시 리스너 초기화
     fun initializeListener(){
         btnSignup.setOnClickListener() {
-            createAccount(newId.text.toString(), newPw.text.toString())
+            createAccount(newEmail.text.toString(), newPw.text.toString())
         }
     }
 
     //회원가입 함수
-    fun createAccount(id: String, password: String) {
+    fun createAccount(email: String, password: String) {
 
-        val userId = newId.text.toString()
+        val userEmail = newEmail.text.toString()
         val userName = newName.text.toString()
         val userTel = newTel.text.toString()
 
-        if (id.isNotEmpty() && password.isNotEmpty()) {
-            auth?.createUserWithEmailAndPassword(id, password)
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            auth?.createUserWithEmailAndPassword(email, password)
                 ?.addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        FirebaseDatabase.getInstance().getReference("User").child("users").child(id).setValue((User(userId, userName, userTel)))
-                        Toast.makeText(
-                            this, "계정 생성 완료.\n로그인해주세요.", Toast.LENGTH_SHORT).show()
+                        FirebaseDatabase.getInstance().getReference("User").child("users").child(email).setValue((User(userEmail, userName, userTel)))
+                        Toast.makeText(this, "계정 생성 완료.\n로그인해주세요.", Toast.LENGTH_SHORT).show()
                         finish() // 가입창 종료
                     } else {
                         Toast.makeText(this, "계정 생성 실패", Toast.LENGTH_SHORT).show()
@@ -73,8 +72,8 @@ class SignupActivity : AppCompatActivity() {
         }
     }
 
-    fun signUp(id: String, password: String) {
-        auth.createUserWithEmailAndPassword(id, password)
+    fun signUp(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) {task ->
                 if (task.isSuccessful) {
                     //Firebase DB에 저장되어 있는 계정 아닐 경우 새로 등록

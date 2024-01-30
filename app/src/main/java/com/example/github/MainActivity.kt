@@ -13,6 +13,8 @@ import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
@@ -47,6 +49,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var toolbar: Toolbar
     lateinit var myCloset: ImageView
     lateinit var ootd: ImageView
+
+    private var doubleBackToExit = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,13 +119,27 @@ class MainActivity : AppCompatActivity() {
         when (item?.itemId){
             R.id.toolbar_myPage -> {
                 //마이페이지 아이콘 눌렀을 때
-                Toast.makeText(applicationContext, "마이페이지 이동", Toast.LENGTH_LONG).show()
                 var intentToMyPage = Intent(this, activity_myPage::class.java)
                 startActivity(intentToMyPage)
                 return super.onOptionsItemSelected(item)
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() { //뒤로가기 두 번 눌러야 앱 종료 가능
+        if (doubleBackToExit) {
+            finishAffinity()
+        } else {
+            Toast.makeText(this, "종료하시려면 뒤로가기를 한번 더 눌러주세요", Toast.LENGTH_SHORT).show()
+            doubleBackToExit = true
+            runDelayed(1500L) { //1.5초 이내에 한 번 더 탭해야 앱 종료 가능
+                doubleBackToExit = false
+            }
+        }
+    }
+    fun runDelayed(millis: Long, function: () -> Unit) {
+        Handler(Looper.getMainLooper()).postDelayed(function, millis)
     }
 
     /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
