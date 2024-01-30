@@ -16,7 +16,10 @@ import android.widget.Toast
 import android.graphics.Point
 import android.os.Build
 import android.os.Looper
+import android.view.MenuItem
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.github.adapter.WeatherAdapter
 import com.example.github.component.Common
@@ -34,6 +37,8 @@ class MainActivity2 : AppCompatActivity() {
     private var baseTime = "1400"      // 발표 시각
     private var curPoint : Point? = null    // 현재 위치의 격자 좌표를 저장할 포인트
 
+    lateinit var toolbar: Toolbar
+    lateinit var actionBar: ActionBar
 
     lateinit var binding: ActivityMain2Binding
     @SuppressLint("SetTextI18n", "MissingPermission")
@@ -42,6 +47,11 @@ class MainActivity2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = setContentView(this, R.layout.activity_main2)
         binding.mainActivity2 = this
+
+        toolbar= findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar) //액티비티의 앱바로 지정
+        actionBar = supportActionBar!!
+        actionBar.setDisplayHomeAsUpEnabled(true) //뒤로가기 버튼 만들기
 
         // Get permission
         val permissionList = arrayOf<String>(
@@ -76,6 +86,17 @@ class MainActivity2 : AppCompatActivity() {
 
     }
 
+    //툴 바 이용
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item?.itemId){
+            android.R.id.home -> {
+                //뒤로가기 눌렀을 때
+                finish()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     // 날씨 가져와서 설정하기
     private fun setWeather(nx : Int, ny : Int) {

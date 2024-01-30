@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -17,6 +18,7 @@ class activity_login : AppCompatActivity() {
     lateinit var joinTextView: TextView
     lateinit var idEditText: EditText
     lateinit var passwordEditText: EditText
+    lateinit var idRememberCheckBox: CheckBox
 
     private lateinit var auth: FirebaseAuth
 
@@ -28,6 +30,7 @@ class activity_login : AppCompatActivity() {
         joinTextView = findViewById(R.id.joinTextView)
         idEditText = findViewById(R.id.idEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
+        idRememberCheckBox = findViewById(R.id.idRememberCheckBox)
 
         auth = Firebase.auth
 
@@ -59,16 +62,10 @@ class activity_login : AppCompatActivity() {
             auth?.signInWithEmailAndPassword(id, password)
                 ?.addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(
-                            baseContext, "로그인에 성공 하였습니다.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(baseContext, "로그인에 성공 하였습니다.", Toast.LENGTH_SHORT).show()
                         moveMainPage(auth?.currentUser)
                     } else {
-                        Toast.makeText(
-                            baseContext, "로그인에 실패 하였습니다.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(baseContext, "로그인에 실패 하였습니다.", Toast.LENGTH_SHORT).show()
                     }
                 }
         }
