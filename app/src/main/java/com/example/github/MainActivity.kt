@@ -43,13 +43,12 @@ import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
-   // private lateinit var iv: ImageView
+
     private lateinit var weatherView: Button
     lateinit var realtimeTalk : LinearLayout
     lateinit var toolbar: Toolbar
     lateinit var myCloset: ImageView
     lateinit var ootd: ImageView
-
     private var doubleBackToExit = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,104 +89,45 @@ class MainActivity : AppCompatActivity() {
             startActivity(intentToOotd)
         }
 
-       /* checkSelfPermission()
-
-        iv = findViewById(R.id.imageView_myCloset)
-        iv.setOnClickListener {
-            val intent = Intent().apply {
-                type = MediaStore.Images.Media.CONTENT_TYPE
-                action = Intent.ACTION_GET_CONTENT
-            }
-            startActivityForResult(intent, 101)
-        }*/
 
 
-    }
-
-    //메뉴 리소스 XML의 내용을 앱바(App Bar)에 반영
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.toolbar_menu, menu)
-        //return super.onCreateOptionsMenu(menu)
-        return true
-    }
-
-
-    //앱바(App Bar)에 표시된 액션 또는 오버플로우 메뉴가 선택되면
-    //액티비티의 onOptionsItemSelected() 메소드가 호출
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item?.itemId){
-            R.id.toolbar_myPage -> {
-                //마이페이지 아이콘 눌렀을 때
-                var intentToMyPage = Intent(this, activity_myPage::class.java)
-                startActivity(intentToMyPage)
-                return super.onOptionsItemSelected(item)
-            }
+        //메뉴 리소스 XML의 내용을 앱바(App Bar)에 반영
+        override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+            val inflater = menuInflater
+            inflater.inflate(R.menu.toolbar_menu, menu)
+            // return super.onCreateOptionsMenu(menu)
+            return true
         }
-        return super.onOptionsItemSelected(item)
-    }
 
-    override fun onBackPressed() { //뒤로가기 두 번 눌러야 앱 종료 가능
-        if (doubleBackToExit) {
-            finishAffinity()
-        } else {
-            Toast.makeText(this, "종료하시려면 뒤로가기를 한번 더 눌러주세요", Toast.LENGTH_SHORT).show()
-            doubleBackToExit = true
-            runDelayed(1500L) { //1.5초 이내에 한 번 더 탭해야 앱 종료 가능
-                doubleBackToExit = false
+
+        //앱바(App Bar)에 표시된 액션 또는 오버플로우 메뉴가 선택되면
+        //액티비티의 onOptionsItemSelected() 메소드가 호출
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+            when (item?.itemId) {
+                R.id.toolbar_myPage -> {
+                    //마이페이지 아이콘 눌렀을 때
+                    var intentToMyPage = Intent(this, activity_myPage::class.java)
+                    startActivity(intentToMyPage)
+                    return super.onOptionsItemSelected(item)
+                }
             }
+            return super.onOptionsItemSelected(item)
         }
-    }
-    fun runDelayed(millis: Long, function: () -> Unit) {
-        Handler(Looper.getMainLooper()).postDelayed(function, millis)
-    }
 
-    /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == 1) {
-            grantResults.indices.forEach { i ->
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("MainActivity", "권한 허용: ${permissions[i]}")
+        override fun onBackPressed() { //뒤로가기 두 번 눌러야 앱 종료 가능
+            if (doubleBackToExit) {
+                finishAffinity()
+            } else {
+                Toast.makeText(this, "종료하시려면 뒤로가기를 한번 더 눌러주세요", Toast.LENGTH_SHORT).show()
+                doubleBackToExit = true
+                runDelayed(1500L) { //1.5초 이내에 한 번 더 탭해야 앱 종료 가능
+                    doubleBackToExit = false
                 }
             }
         }
-    }
 
-    private fun checkSelfPermission() {
-        val permissionsNeeded = mutableListOf<String>()
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            permissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        fun runDelayed(millis: Long, function: () -> Unit) {
+            Handler(Looper.getMainLooper()).postDelayed(function, millis)
         }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            permissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
-
-        if (permissionsNeeded.isNotEmpty()) {
-            ActivityCompat.requestPermissions(this, permissionsNeeded.toTypedArray(), 1)
-        } else {
-            Toast.makeText(this, "권한을 모두 허용", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 101 && resultCode == RESULT_OK) {
-            try {
-                val inputStream = data?.data?.let { contentResolver.openInputStream(it) }
-                val bitmap = BitmapFactory.decodeStream(inputStream)
-                inputStream?.close()
-                iv.setImageBitmap(bitmap)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        } else if (requestCode == 101 && resultCode == RESULT_CANCELED) {
-            Toast.makeText(this, "취소", Toast.LENGTH_SHORT).show()
-        }
-    }*/
-
     }
 

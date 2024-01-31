@@ -27,6 +27,15 @@
         android:src="@drawable/img240124" /><!-- 나중에 실제 이미지로 변경 -->
     <!-- android:contentDescription="@string/image_description"-->
 
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:layout_marginTop="8dp"/>
+
+
     <WebView
         android:layout_width="match_parent"
         android:layout_height="0dp"

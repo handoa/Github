@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import android.Manifest
 import android.app.Activity
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -22,6 +23,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.github.adapter.ImageAdapter
 import com.example.github.network.DisplayImageActivity
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -37,13 +41,20 @@ import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
 class activity_myCloset : AppCompatActivity() {
-    private lateinit var iv: ImageView
+
+
     private lateinit var imageView: ImageView
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var imageAdapter: ImageAdapter
     lateinit var toolbar: Toolbar
     lateinit var actionBar: ActionBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_closet)
+
+        recyclerView = findViewById(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        loadImagesFromLastYear()
 
 
         toolbar = findViewById(R.id.toolbar)
@@ -51,78 +62,87 @@ class activity_myCloset : AppCompatActivity() {
         actionBar = supportActionBar!!
         actionBar.setDisplayHomeAsUpEnabled(true) //뒤로가기 버튼 만들기
 
+        // 저장소 읽기 권한 확인 및 요청
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            // 권한이 이미 부여된 경우
+            loadImagesFromLastYear()
+        } else {
+            // 권한이 부여되지 않은 경우 권한 요청
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_REQUEST_READ_EXTERNAL_STORAGE)
+        }
 
-        checkSelfPermission()
-
-        iv = findViewById(R.id.btnChooseImage)
-        iv.setOnClickListener {
-            val intent = Intent().apply {
-                type = MediaStore.Images.Media.CONTENT_TYPE
-                action = Intent.ACTION_GET_CONTENT
+        fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            if (requestCode == PERMISSION_REQUEST_READ_EXTERNAL_STORAGE) {
+                // 권한 요청 결과 확인
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // 권한이 부여된 경우
+                    loadImagesFromLastYear()
+                } else {
+                    // 권한이 거부된 경우
+                    Toast.makeText(this, "권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
+                }
             }
-            startActivityForResult(intent, 101)
         }
-
-        imageView = findViewById(R.id.imageView)
-        if (checkSelfPermission()) {
-            setRandomImageFromLastYear()
-        }
-
 
 
     }
 
+    private fun loadImagesFromLastYear() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            val images = mutableListOf<Uri>()
 
+            // 현재 날짜에서 1년 전으로 설정하고, 한 달의 기간을 설정
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.YEAR, -1) // 현재로부터 1년 전
+            val startDate = calendar.timeInMillis
+            calendar.add(Calendar.MONTH, 1) // 1년 전 날짜로부터 한 달 후
+            val endDate = calendar.timeInMillis
 
-    private fun setRandomImageFromLastYear() {
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.YEAR, -1)
-        val endDate = calendar.timeInMillis
-        calendar.add(Calendar.MONTH, -1)
-        val startDate = calendar.timeInMillis
+            val projection = arrayOf(MediaStore.Images.Media._ID)
+            val selection = "${MediaStore.Images.Media.DATE_TAKEN} >= ? AND ${MediaStore.Images.Media.DATE_TAKEN} <= ?"
+            val selectionArgs = arrayOf(startDate.toString(), endDate.toString())
 
-        val projection = arrayOf(MediaStore.Images.Media._ID)
-        val selection = "${MediaStore.Images.Media.DATE_TAKEN} >= ? AND ${MediaStore.Images.Media.DATE_TAKEN} <= ?"
-        val selectionArgs = arrayOf(startDate.toString(), endDate.toString())
+            val cursor = contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                selection,
+                selectionArgs,
+                "${MediaStore.Images.Media.DATE_TAKEN} DESC"
+            )
 
-        val cursor = contentResolver.query(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            projection,
-            selection,
-            selectionArgs,
-            null
-        )
-
-        val imageIds = mutableListOf<Long>()
-        cursor?.use {
-            val idColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-            while (it.moveToNext()) {
-                imageIds.add(it.getLong(idColumn))
+            cursor?.use {
+                val idColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+                while (it.moveToNext()) {
+                    val id = it.getLong(idColumn)
+                    val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                    images.add(uri)
+                }
             }
-        }
 
-        if (imageIds.isNotEmpty()) {
-            val randomId = imageIds[Random.nextInt(imageIds.size)]
-            val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI.buildUpon()
-                .appendPath(randomId.toString()).build()
-            imageView.setImageURI(uri)
+            imageAdapter = ImageAdapter(images)
+            recyclerView.adapter = imageAdapter
+        } else {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_REQUEST_READ_EXTERNAL_STORAGE)
         }
     }
 
-    private fun checkSelfPermission(): Boolean {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
-            return false
-        }
-        return true
+
+
+
+
+    companion object {
+        private const val PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 101
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 1 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            setRandomImageFromLastYear()
+        if (requestCode == PERMISSION_REQUEST_READ_EXTERNAL_STORAGE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            loadImagesFromLastYear()
         }
     }
+
+
 
 
 
