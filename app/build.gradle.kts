@@ -62,6 +62,7 @@ fun getApiKey(propertyKey: String): String {
         implementation("com.google.android.material:material:1.8.0")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
         implementation("com.github.bumptech.glide:glide:4.12.0")
+        implementation("com.google.firebase:firebase-database:20.3.0")
         //implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
         annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 

@@ -182,23 +182,17 @@ class activity_myCloset : AppCompatActivity() {
             loadImagesFromLastYear()
         }
     }*/
+    }
 
-
-
-
-
-
-
-        override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            when (item?.itemId) {
-                android.R.id.home -> {
-                    //뒤로가기 눌렀을 때
-                    finish()
-                    return true
-                }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                //뒤로가기 눌렀을 때
+                finish()
+                return true
             }
-            return super.onOptionsItemSelected(item)
         }
+        return super.onOptionsItemSelected(item)
     }
 
     // 권한 확인 및 요청 함수

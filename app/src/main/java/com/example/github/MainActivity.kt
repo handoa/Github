@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory
 import android.media.ExifInterface
 import android.media.Image
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -25,6 +26,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
@@ -45,12 +47,13 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity() {
 
     private lateinit var weatherView: Button
-    lateinit var realtimeTalk : LinearLayout
+    lateinit var realtimeTalk: LinearLayout
     lateinit var toolbar: Toolbar
     lateinit var myCloset: ImageView
     lateinit var ootd: ImageView
     private var doubleBackToExit = false
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -88,46 +91,45 @@ class MainActivity : AppCompatActivity() {
             var intentToOotd = Intent(this, activity_ootd::class.java)
             startActivity(intentToOotd)
         }
+    }
+
+    //메뉴 리소스 XML의 내용을 앱바(App Bar)에 반영
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.toolbar_menu, menu)
+        // return super.onCreateOptionsMenu(menu)
+        return true
+    }
 
 
-
-        //메뉴 리소스 XML의 내용을 앱바(App Bar)에 반영
-        override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-            val inflater = menuInflater
-            inflater.inflate(R.menu.toolbar_menu, menu)
-            // return super.onCreateOptionsMenu(menu)
-            return true
-        }
-
-
-        //앱바(App Bar)에 표시된 액션 또는 오버플로우 메뉴가 선택되면
-        //액티비티의 onOptionsItemSelected() 메소드가 호출
-        override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            when (item?.itemId) {
-                R.id.toolbar_myPage -> {
-                    //마이페이지 아이콘 눌렀을 때
-                    var intentToMyPage = Intent(this, activity_myPage::class.java)
-                    startActivity(intentToMyPage)
-                    return super.onOptionsItemSelected(item)
-                }
-            }
-            return super.onOptionsItemSelected(item)
-        }
-
-        override fun onBackPressed() { //뒤로가기 두 번 눌러야 앱 종료 가능
-            if (doubleBackToExit) {
-                finishAffinity()
-            } else {
-                Toast.makeText(this, "종료하시려면 뒤로가기를 한번 더 눌러주세요", Toast.LENGTH_SHORT).show()
-                doubleBackToExit = true
-                runDelayed(1500L) { //1.5초 이내에 한 번 더 탭해야 앱 종료 가능
-                    doubleBackToExit = false
-                }
+    //앱바(App Bar)에 표시된 액션 또는 오버플로우 메뉴가 선택되면
+    //액티비티의 onOptionsItemSelected() 메소드가 호출
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item?.itemId) {
+            R.id.toolbar_myPage -> {
+                //마이페이지 아이콘 눌렀을 때
+                var intentToMyPage = Intent(this, activity_myPage::class.java)
+                startActivity(intentToMyPage)
+                return super.onOptionsItemSelected(item)
             }
         }
+        return super.onOptionsItemSelected(item)
+    }
 
-        fun runDelayed(millis: Long, function: () -> Unit) {
-            Handler(Looper.getMainLooper()).postDelayed(function, millis)
+    override fun onBackPressed() { //뒤로가기 두 번 눌러야 앱 종료 가능
+        if (doubleBackToExit) {
+            finishAffinity()
+        } else {
+            Toast.makeText(this, "종료하시려면 뒤로가기를 한번 더 눌러주세요", Toast.LENGTH_SHORT).show()
+            doubleBackToExit = true
+            runDelayed(1500L) { //1.5초 이내에 한 번 더 탭해야 앱 종료 가능
+                doubleBackToExit = false
+            }
         }
     }
+
+    fun runDelayed(millis: Long, function: () -> Unit) {
+        Handler(Looper.getMainLooper()).postDelayed(function, millis)
+    }
+}
 
