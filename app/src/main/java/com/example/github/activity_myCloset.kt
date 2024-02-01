@@ -274,7 +274,6 @@ class activity_myCloset : AppCompatActivity() {
                                 id
                             )
                         images.add(uri)
-                    }
                 }
 
                 imageAdapter = ImageAdapter(images)

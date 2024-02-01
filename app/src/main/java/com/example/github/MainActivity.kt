@@ -47,12 +47,13 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity() {
 
     private lateinit var weatherView: Button
-    lateinit var realtimeTalk : LinearLayout
+    lateinit var realtimeTalk: LinearLayout
     lateinit var toolbar: Toolbar
     lateinit var myCloset: ImageView
     lateinit var ootd: ImageView
     private var doubleBackToExit = false
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -92,6 +93,9 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+
+
+    }
 
     //메뉴 리소스 XML의 내용을 앱바(App Bar)에 반영
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
