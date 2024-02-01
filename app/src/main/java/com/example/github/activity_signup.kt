@@ -27,6 +27,7 @@ class SignupActivity : AppCompatActivity() {
     lateinit var newName: EditText
     lateinit var newTel: EditText
     lateinit var btnSignup: Button
+    private var uid : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,15 +73,16 @@ class SignupActivity : AppCompatActivity() {
         val userEmail = newEmail.text.toString()
         val userName = newName.text.toString()
         val userTel = newTel.text.toString()
+        //uid = auth.uid.toString()
 
         if (email.isNotEmpty() && password.isNotEmpty()) {
             auth?.createUserWithEmailAndPassword(email, password)
                 ?.addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        //saveProfile()
-                        writeNewUser(userId, userEmail, userName, userTel)
-                        //FirebaseDatabase.getInstance().getReference("User").child("users").child(email).setValue((User(userEmail, userName, userTel)))
                         Toast.makeText(this, "계정 생성 완료.\n로그인해주세요.", Toast.LENGTH_SHORT).show()
+                        //startActivity(Intent(this, activity_login::class.java))
+                        uid = task.getResult().getUser()!!.getUid()
+                        writeNewUser(userId, userEmail, userName, userTel)
                         startActivity(Intent(this, activity_login::class.java))
                         finish() // 가입창 종료
                     } else {
@@ -92,7 +94,7 @@ class SignupActivity : AppCompatActivity() {
 
     fun writeNewUser(userId: String, name:String, email: String, tel: String) {
         val user = User(userId, name, email, tel)
-        database.child("users").child(userId).setValue(user)
+        database.child("users").child(uid).setValue(user)
     }
 
     /*fun signUp(email: String, password: String) {

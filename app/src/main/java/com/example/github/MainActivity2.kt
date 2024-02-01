@@ -192,7 +192,7 @@ class MainActivity2 : AppCompatActivity() {
                             // 오늘 날짜 텍스트뷰 설정
                             binding.tvDate.text = SimpleDateFormat("MM월 dd일", Locale.getDefault()).format(Calendar.getInstance().time) + " 날씨"
                             // nx, ny지점의 날씨 가져와서 설정하기
-                            setWeather(curPoint!!.x, curPoint!!.y)
+                            //setWeather(curPoint!!.x, curPoint!!.y)
                         }
                     }
                 }

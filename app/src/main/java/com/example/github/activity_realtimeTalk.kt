@@ -63,15 +63,8 @@ class activity_realtimeTalk : AppCompatActivity() {
         initializeListener()
         setupChatRooms()
 
-        /*//Firebase DB
-        // database 쓰기
-        val database = Firebase.database
-        val myRef = database.getReference("message")
-
-        myRef.setValue("Hello, Wolrd!")
-
         // database 읽기
-        myRef.addValueEventListener(object : ValueEventListener {
+        /*myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.

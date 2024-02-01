@@ -90,9 +90,7 @@ class MainActivity : AppCompatActivity() {
             var intentToOotd = Intent(this, activity_ootd::class.java)
             startActivity(intentToOotd)
         }
-
-
-
+    }
     //메뉴 리소스 XML의 내용을 앱바(App Bar)에 반영
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
