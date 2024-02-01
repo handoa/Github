@@ -274,23 +274,21 @@ class activity_myCloset : AppCompatActivity() {
                                 id
                             )
                         images.add(uri)
+                    }
+
+                    imageAdapter = ImageAdapter(images)
+                    recyclerView.adapter = imageAdapter
+                } else {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                        PERMISSION_REQUEST_READ_EXTERNAL_STORAGE
+                    )
                 }
-
-                imageAdapter = ImageAdapter(images)
-                recyclerView.adapter = imageAdapter
-            } else {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    PERMISSION_REQUEST_READ_EXTERNAL_STORAGE
-                )
             }
+
+
         }
-
-
-
-
-
 }
 
 
