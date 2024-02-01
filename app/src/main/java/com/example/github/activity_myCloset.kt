@@ -42,12 +42,10 @@ import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
-
-
 class activity_myCloset : AppCompatActivity() {
 
-    // private val permissionsRequestCode = 100
-   // private val pickImageRequestCode = 101
+    //private val permissionsRequestCode = 100
+    //private val pickImageRequestCode = 101
 
     companion object {
         private const val PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 102 // 값 변경
@@ -206,20 +204,17 @@ class activity_myCloset : AppCompatActivity() {
 
     // 권한 확인 및 요청 함수
     private fun checkSelfPermission() {
-        Log.d("Permissions", "Checking READ_EXTERNAL_STORAGE permission")
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Log.d("Permissions", "READ_EXTERNAL_STORAGE permission not granted, requesting")
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                 PERMISSION_REQUEST_READ_EXTERNAL_STORAGE
             )
         } else {
-            Log.d("Permissions", "READ_EXTERNAL_STORAGE permission already granted")
             loadImagesFromLastYear()
         }
     }
@@ -233,10 +228,8 @@ class activity_myCloset : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_READ_EXTERNAL_STORAGE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("Permissions", "READ_EXTERNAL_STORAGE permission granted")
                 loadImagesFromLastYear()
             } else {
-                Log.d("Permissions", "READ_EXTERNAL_STORAGE permission denied")
                 Toast.makeText(this, "권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
             }
         }

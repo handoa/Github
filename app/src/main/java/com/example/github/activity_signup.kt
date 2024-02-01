@@ -1,6 +1,7 @@
 package com.example.github
 
 import android.content.Intent
+import android.content.LocusId
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -11,12 +12,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class SignupActivity : AppCompatActivity() {
 
+    private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
+    lateinit var newId: EditText
     lateinit var newEmail: EditText
     lateinit var newPw: EditText
     lateinit var newName: EditText
@@ -27,7 +32,9 @@ class SignupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
 
+        database = Firebase.database.reference
         auth = Firebase.auth
+        newId = findViewById(R.id.new_id)
         newEmail = findViewById(R.id.new_email)
         newPw = findViewById(R.id.new_pw)
         newName = findViewById(R.id.new_name)
@@ -37,7 +44,14 @@ class SignupActivity : AppCompatActivity() {
         initializeView()
         initializeListener()
 
+        // Write a message to the database
+        /*val database = Firebase.database
+        val myRef = database.getReference("User")
+
+        myRef.setValue("Hello, World!")*/
+
     }
+
 
     //뷰 초기화
     fun initializeView(){
@@ -54,6 +68,7 @@ class SignupActivity : AppCompatActivity() {
     //회원가입 함수
     fun createAccount(email: String, password: String) {
 
+        val userId = newId.text.toString()
         val userEmail = newEmail.text.toString()
         val userName = newName.text.toString()
         val userTel = newTel.text.toString()
@@ -62,8 +77,11 @@ class SignupActivity : AppCompatActivity() {
             auth?.createUserWithEmailAndPassword(email, password)
                 ?.addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        FirebaseDatabase.getInstance().getReference("User").child("users").child(email).setValue((User(userEmail, userName, userTel)))
+                        //saveProfile()
+                        writeNewUser(userId, userEmail, userName, userTel)
+                        //FirebaseDatabase.getInstance().getReference("User").child("users").child(email).setValue((User(userEmail, userName, userTel)))
                         Toast.makeText(this, "계정 생성 완료.\n로그인해주세요.", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, activity_login::class.java))
                         finish() // 가입창 종료
                     } else {
                         Toast.makeText(this, "계정 생성 실패", Toast.LENGTH_SHORT).show()
@@ -72,7 +90,12 @@ class SignupActivity : AppCompatActivity() {
         }
     }
 
-    fun signUp(email: String, password: String) {
+    fun writeNewUser(userId: String, name:String, email: String, tel: String) {
+        val user = User(userId, name, email, tel)
+        database.child("users").child(userId).setValue(user)
+    }
+
+    /*fun signUp(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) {task ->
                 if (task.isSuccessful) {
@@ -91,7 +114,7 @@ class SignupActivity : AppCompatActivity() {
         if (user != null) {
             startActivity(Intent(this, activity_login::class.java))
         }
-    }
+    }*/
 
 }
 
