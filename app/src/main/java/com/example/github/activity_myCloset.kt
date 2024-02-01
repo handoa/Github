@@ -236,62 +236,60 @@ class activity_myCloset : AppCompatActivity() {
     }
 
 
-        private fun loadImagesFromLastYear() {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                val images = mutableListOf<Uri>()
+    private fun loadImagesFromLastYear() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val images = mutableListOf<Uri>()
 
-                // 현재 날짜에서 1년 전으로 설정하고, 한 달의 기간을 설정
-                val calendar = Calendar.getInstance()
-                calendar.add(Calendar.YEAR, -1) // 현재로부터 1년 전
-                val startDate = calendar.timeInMillis
-                calendar.add(Calendar.MONTH, 1) // 1년 전 날짜로부터 한 달 후
-                val endDate = calendar.timeInMillis
+            // 현재 날짜에서 1년 전으로 설정하고, 한 달의 기간을 설정
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.YEAR, -1) // 현재로부터 1년 전
+            val startDate = calendar.timeInMillis
+            calendar.add(Calendar.MONTH, 1) // 1년 전 날짜로부터 한 달 후
+            val endDate = calendar.timeInMillis
 
-                val projection = arrayOf(MediaStore.Images.Media._ID)
-                val selection =
-                    "${MediaStore.Images.Media.DATE_TAKEN} >= ? AND ${MediaStore.Images.Media.DATE_TAKEN} <= ?"
-                val selectionArgs = arrayOf(startDate.toString(), endDate.toString())
+            val projection = arrayOf(MediaStore.Images.Media._ID)
+            val selection =
+                "${MediaStore.Images.Media.DATE_TAKEN} >= ? AND ${MediaStore.Images.Media.DATE_TAKEN} <= ?"
+            val selectionArgs = arrayOf(startDate.toString(), endDate.toString())
 
-                val cursor = contentResolver.query(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    projection,
-                    selection,
-                    selectionArgs,
-                    "${MediaStore.Images.Media.DATE_TAKEN} DESC"
-                )
+            val cursor = contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                selection,
+                selectionArgs,
+                "${MediaStore.Images.Media.DATE_TAKEN} DESC"
+            )
 
-                cursor?.use {
-                    val idColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-                    while (it.moveToNext()) {
-                        val id = it.getLong(idColumn)
-                        val uri =
-                            ContentUris.withAppendedId(
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                id
-                            )
-                        images.add(uri)
-                    }
-
-                    imageAdapter = ImageAdapter(images)
-                    recyclerView.adapter = imageAdapter
-                } else {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                        PERMISSION_REQUEST_READ_EXTERNAL_STORAGE
-                    )
+            cursor?.use {
+                val idColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+                while (it.moveToNext()) {
+                    val id = it.getLong(idColumn)
+                    val uri =
+                        ContentUris.withAppendedId(
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            id
+                        )
+                    images.add(uri)
                 }
             }
 
-
+            imageAdapter = ImageAdapter(images)
+            recyclerView.adapter = imageAdapter
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                PERMISSION_REQUEST_READ_EXTERNAL_STORAGE
+            )
         }
+    }
+
+
+
+
+
 }
-
-
-
-
-
