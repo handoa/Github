@@ -21,6 +21,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.github.R.layout.activity_main2
 import com.example.github.adapter.WeatherAdapter
 import com.example.github.component.Common
 import com.example.github.data.ITEM
@@ -45,7 +46,7 @@ class MainActivity2 : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = setContentView(this, R.layout.activity_main2)
+        binding = setContentView<ActivityMain2Binding>(this, activity_main2)
         binding.mainActivity2 = this
 
         toolbar= findViewById(R.id.toolbar)
