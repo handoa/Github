@@ -29,6 +29,7 @@ class activity_ootd : AppCompatActivity() {
         actionBar.setDisplayHomeAsUpEnabled(true) //뒤로가기 버튼 만들기
 
         gridLayout = findViewById(R.id.gridLayout)
+        storageReference = FirebaseStorage.getInstance().reference
         //storageReference = FirebaseStorage.getInstance().getReference()
 
         // Firebase Storage 이미지 경로
