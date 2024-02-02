@@ -6,12 +6,23 @@
     android:id="@+id/background"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
 
-        android:id="@+id/tvChat"
+    <TextView
+        android:id="@+id/tvId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginBottom="1dp"
+        android:text="hi123"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvMsg"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <TextView
+        android:id="@+id/tvMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/chat_box"
         android:gravity="start|center_vertical"
@@ -23,16 +34,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txt_date"
+        android:id="@+id/tvTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:text="오전 10:23"
         android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tvChat"
-        app:layout_constraintEnd_toStartOf="@+id/tvChat"
-        app:layout_constraintTop_toTopOf="@+id/tvChat"
+        app:layout_constraintBottom_toBottomOf="@+id/tvMsg"
+        app:layout_constraintEnd_toStartOf="@+id/tvMsg"
+        app:layout_constraintTop_toTopOf="@+id/tvMsg"
         app:layout_constraintVertical_bias="0.8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

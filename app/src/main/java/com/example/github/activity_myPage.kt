@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 import com.example.github.data.User
+import com.example.github.data.userId
 import com.google.firebase.appcheck.internal.util.Logger.TAG
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -42,6 +43,7 @@ class activity_myPage : AppCompatActivity() {
         setSupportActionBar(toolbar) //액티비티의 앱바로 지정
         actionBar = supportActionBar!!
         actionBar.setDisplayHomeAsUpEnabled(true) //뒤로가기 버튼 만들기
+
         info_userEmail = findViewById(R.id.info_userEmail)
         info_userId = findViewById(R.id.info_userId)
         info_userName = findViewById(R.id.info_userName)
@@ -77,6 +79,7 @@ class activity_myPage : AppCompatActivity() {
         //로그아웃 버튼 클릭 시 로그아웃 후 로그인 페이지로 이동
         btnLogout.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
+            userId.userid = ""
             var intentToLogin = Intent(this, activity_login::class.java)
             intentToLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intentToLogin)

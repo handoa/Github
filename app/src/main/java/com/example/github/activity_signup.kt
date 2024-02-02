@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.github.data.User
+import com.example.github.data.userId
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
@@ -79,11 +80,10 @@ class SignupActivity : AppCompatActivity() {
             auth?.createUserWithEmailAndPassword(email, password)
                 ?.addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(this, "계정 생성 완료.\n로그인해주세요.", Toast.LENGTH_SHORT).show()
-                        //startActivity(Intent(this, activity_login::class.java))
+                        Toast.makeText(this, "회원가입이 완료되었어요.\n환영합니다!", Toast.LENGTH_SHORT).show()
                         uid = task.getResult().getUser()!!.getUid()
                         writeNewUser(userId, userEmail, userName, userTel)
-                        startActivity(Intent(this, activity_login::class.java))
+                        //startActivity(Intent(this, activity_login::class.java))
                         finish() // 가입창 종료
                     } else {
                         Toast.makeText(this, "계정 생성 실패", Toast.LENGTH_SHORT).show()
@@ -95,6 +95,7 @@ class SignupActivity : AppCompatActivity() {
     fun writeNewUser(userId: String, name:String, email: String, tel: String) {
         val user = User(userId, name, email, tel)
         database.child("users").child(uid).setValue(user)
+        com.example.github.data.userId.userid = userId
     }
 
     /*fun signUp(email: String, password: String) {

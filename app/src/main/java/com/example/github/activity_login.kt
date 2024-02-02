@@ -6,14 +6,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.example.github.data.User
+import com.example.github.data.userId
+import com.google.firebase.appcheck.internal.util.Logger
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.getValue
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class activity_login : AppCompatActivity() {
@@ -25,6 +35,7 @@ class activity_login : AppCompatActivity() {
 
     lateinit var auth: FirebaseAuth
     lateinit var preference: SharedPreferences
+    lateinit var database: DatabaseReference
 
     private var doubleBackToExit = false
 
@@ -39,7 +50,6 @@ class activity_login : AppCompatActivity() {
         idRememberCheckBox = findViewById(R.id.idRememberCheckBox)
 
         auth = Firebase.auth
-
         initProperty()
         initializeView()
         initializeListener()
@@ -76,6 +86,8 @@ class activity_login : AppCompatActivity() {
     // 로그인
     private fun signIn(id: String, password: String) {
 
+        var uid = FirebaseAuth.getInstance().currentUser?.uid.toString()
+
         if (id.isNullOrBlank() && password.isNullOrBlank())
             Toast.makeText(this, "아이디 또는 패스워드를 입력해주세요", Toast.LENGTH_SHORT).show()
         else {
@@ -93,7 +105,7 @@ class activity_login : AppCompatActivity() {
         }
     }
 
-    private fun updateUI(user: FirebaseUser?) { //로그인 성공 시 화면 이동
+    private fun updateUI(user: FirebaseUser?) { //로그인 성공 시 메인화면으로 이동
         if (user != null) {
             try {
                 if (idRememberCheckBox.isChecked) { //체크박스 체크 시, 이메일 주소 저장

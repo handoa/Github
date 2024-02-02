@@ -34,8 +34,8 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 class MainActivity2 : AppCompatActivity() {
-    private var baseDate = "20210510"  // 발표 일자
-    private var baseTime = "1400"      // 발표 시각
+    private var baseDate = "20210628"  // 발표 일자
+    private var baseTime = "0500"      // 발표 시각
     private var curPoint : Point? = null    // 현재 위치의 격자 좌표를 저장할 포인트
 
     lateinit var toolbar: Toolbar
@@ -48,6 +48,7 @@ class MainActivity2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = setContentView<ActivityMain2Binding>(this, activity_main2)
         binding.mainActivity2 = this
+        //setContentView(binding.root)
 
         toolbar= findViewById(R.id.toolbar)
         setSupportActionBar(toolbar) //액티비티의 앱바로 지정
@@ -71,6 +72,7 @@ class MainActivity2 : AppCompatActivity() {
 
 
 
+
         // 오늘 날짜 텍스트뷰 설정
         binding.tvDate.text = SimpleDateFormat("MM월 dd일", Locale.getDefault()).format(Calendar.getInstance().time) + "날씨"
 
@@ -81,7 +83,7 @@ class MainActivity2 : AppCompatActivity() {
             requestLocation()
 
             // 날씨 정보를 가져와서 어댑터에 설정
-            setWeather(curPoint!!.x, curPoint!!.y)
+            //setWeather(curPoint!!.x, curPoint!!.y)
         }
 
 
@@ -119,6 +121,7 @@ class MainActivity2 : AppCompatActivity() {
         // (한 페이지 결과 수 = 60, 페이지 번호 = 1, 응답 자료 형식-"JSON", 발표 날싸, 발표 시각, 예보지점 좌표)
         val call = WeatherObject.getRetrofitService().getWeather(60, 1, "JSON", baseDate, baseTime, nx, ny)
 
+
         // 비동기적으로 실행하기
         call.enqueue(object : retrofit2.Callback<WEATHER> {
             // 응답 성공 시
@@ -126,6 +129,7 @@ class MainActivity2 : AppCompatActivity() {
                 if (response.isSuccessful) {
                     // 날씨 정보 가져오기
                     val it: List<ITEM> = response.body()!!.response.body.items.item
+                    //Log.d("text", "응답성공")
 
                     // 현재 시각부터 1시간 뒤의 날씨 6개를 담을 배열
                     val weatherArr = arrayOf(ModelWeather(), ModelWeather(), ModelWeather(), ModelWeather(), ModelWeather(), ModelWeather())
@@ -192,7 +196,7 @@ class MainActivity2 : AppCompatActivity() {
                             // 오늘 날짜 텍스트뷰 설정
                             binding.tvDate.text = SimpleDateFormat("MM월 dd일", Locale.getDefault()).format(Calendar.getInstance().time) + " 날씨"
                             // nx, ny지점의 날씨 가져와서 설정하기
-                            //setWeather(curPoint!!.x, curPoint!!.y)
+                            setWeather(curPoint!!.x, curPoint!!.y)
                         }
                     }
                 }
