@@ -28,6 +28,9 @@ class activity_ootd : AppCompatActivity() {
         actionBar = supportActionBar!!
         actionBar.setDisplayHomeAsUpEnabled(true) //뒤로가기 버튼 만들기
 
+        gridLayout = findViewById(R.id.gridLayout)
+        //storageReference = FirebaseStorage.getInstance().getReference()
+
         // Firebase Storage 이미지 경로
         val imagePaths = listOf(
             "Rectangle 27.png",
@@ -66,10 +69,6 @@ class activity_ootd : AppCompatActivity() {
         }.addOnFailureListener {
         }
     }
-
-
-
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId){

@@ -127,9 +127,10 @@ class MainActivity2 : AppCompatActivity() {
             // 응답 성공 시
             override fun onResponse(call: Call<WEATHER>, response: Response<WEATHER>) {
                 if (response.isSuccessful) {
+                    Log.d("test", "isSuccessful")
                     // 날씨 정보 가져오기
                     val it: List<ITEM> = response.body()!!.response.body.items.item
-                    //Log.d("text", "응답성공")
+                    Log.d("text", "응답성공")
 
                     // 현재 시각부터 1시간 뒤의 날씨 6개를 담을 배열
                     val weatherArr = arrayOf(ModelWeather(), ModelWeather(), ModelWeather(), ModelWeather(), ModelWeather(), ModelWeather())

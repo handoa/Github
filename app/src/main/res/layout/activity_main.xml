@@ -42,7 +42,7 @@
     <ImageView
         android:id="@+id/codiImage"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="30dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="4dp"
         android:layout_marginRight="20dp"
@@ -53,7 +53,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/weatherView"
-        app:srcCompat="@drawable/temper" />
+        app:srcCompat="@drawable/temper1" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -100,7 +100,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
                     android:layout_weight="1"
-                    android:text="지금 눈오고 너무 추움.."
+                    android:text="지금 날씨 어떤가요?"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -109,7 +109,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="와!! 추워!!!!!"
+                    android:text="실시간으로 주고받는 날씨 정보"
                     android:textColor="#8A8484"
                     android:textSize="12sp" />
 
@@ -117,12 +117,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="오늘 눈 오니까 다들 우산 챙겨!"
+                    android:text="지금 확인해보세요!"
                     android:textColor="#8A8484"
                     android:textSize="12sp" />
 
             </LinearLayout>
 
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="작년엔 이렇게 입었어요"
+                android:layout_marginLeft="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="사람들은 이렇게 입었어요"
+                android:layout_marginLeft="50dp" />
 
         </LinearLayout>
 
@@ -139,10 +157,10 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/strock_black"
+                android:padding="1dp"
                 android:clipToOutline="true"
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/mycloset" />
-
 
             <ImageView
                 android:id="@+id/imageView_ootd"
@@ -150,10 +168,11 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
+                android:padding="1dp"
                 android:background="@drawable/strock_black"
                 android:clipToOutline="true"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/mycloset" />
+                app:srcCompat="@drawable/others" />
 
         </LinearLayout>
 
