@@ -41,6 +41,7 @@ class activity_realtimeTalk : AppCompatActivity(){
     lateinit var userRef: DatabaseReference
     lateinit var firebaseDatabase: FirebaseDatabase  //Firebase Database 관리 객체 참조 변수
     lateinit var chatRef: DatabaseReference  //'chat'노드의 참조 객체 참조 변수
+    var msgId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +61,23 @@ class activity_realtimeTalk : AppCompatActivity(){
         firebaseDatabase = FirebaseDatabase.getInstance()
         chatRef = firebaseDatabase.getReference("chat")
         userRef = firebaseDatabase.getReference("users")
+
+
+        //firebase에서 유저의 아이디를 읽어오기
+        val uid = FirebaseAuth.getInstance().currentUser?.uid.toString()
+        userRef.child(uid).addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                msgId = dataSnapshot.getValue<User>()!!.userId.toString()
+                Log.d(Logger.TAG, "Value is: $msgId")
+                //userId 클래스의 userid 값을 firebase에서 불러온 id로 설정
+                userId.userid = msgId
+                Log.d("user클래스 값 : ", userId.userid!!)
+            }
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w(Logger.TAG, "Failed to read value.", error.toException())
+            }
+        })
 
         //firbase에서 채팅 메세지들 실시간 읽어오기
         //'chat'노드에 저장되어 있는 데이터들을 읽어오기
@@ -103,21 +121,7 @@ class activity_realtimeTalk : AppCompatActivity(){
     fun clickSend(view: View) {
 
         //firbase DB에 저장할 값들
-        var msgId: String = userId.userid.toString()
         val message: String = edt.text.toString()
-
-        val uid = FirebaseAuth.getInstance().currentUser?.uid.toString()
-        userRef.child(uid).addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                msgId = dataSnapshot.getValue<User>()!!.userId.toString()
-                //msgId.value!!.userId.toString()
-                Log.d(Logger.TAG, "Value is: $msgId")
-            }
-            override fun onCancelled(error: DatabaseError) {
-                // Failed to read value
-                Log.w(Logger.TAG, "Failed to read value.", error.toException())
-            }
-        })
 
         val calendar: Calendar = Calendar.getInstance() // 현재 시간을 가지고 있는 객체
         val time: String = "${calendar[Calendar.HOUR_OF_DAY]}:${calendar[Calendar.MINUTE]}"
@@ -131,139 +135,3 @@ class activity_realtimeTalk : AppCompatActivity(){
         edt.setText("")
     }
 }
-
-/*@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-class activity_realtimeTalk : AppCompatActivity() {
-    lateinit var toolbar: Toolbar
-    lateinit var actionBar: ActionBar
-    lateinit var btnSend: Button
-    lateinit var edt: EditText
-    //lateinit var stEmail: String
-
-    lateinit var recyclerView_chat: RecyclerView
-    private lateinit var firebaseDatabase: DatabaseReference
-    lateinit var chatRoom: ChatRoom
-    lateinit var chatRoomKey: String
-    lateinit var opponentUser: User
-    lateinit var myUid: String
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_realtime_talk)
-
-        toolbar= findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar) //액티비티의 앱바로 지정
-        actionBar = supportActionBar!!
-        actionBar.setDisplayHomeAsUpEnabled(true) //뒤로가기 버튼 만들기
-
-        initializerProperty()
-        initializeView()
-        initializeListener()
-        setupChatRooms()
-
-        // database 읽기
-        /*myRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                val value = dataSnapshot.getValue<String>()
-                Log.d(TAG, "Value is: $value")
-            }
-            override fun onCancelled(error: DatabaseError) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException())
-            }
-        })*/
-    }
-
-    fun initializerProperty(){ //변수 초기화
-        myUid = FirebaseAuth.getInstance().currentUser?.uid!!  //현재 로그인한 유저 id
-        firebaseDatabase = FirebaseDatabase.getInstance().reference!!
-
-        chatRoom = (intent.getSerializableExtra("ChatRoom", ChatRoom::class.java)!!)
-        chatRoomKey = intent.getStringExtra("ChatRoomKey")!!
-        //opponentUser = (intent.getSerializableExtra("Opponent", User::class.java)!!)  //상대방 유저 정보
-    }
-
-    fun initializeView() {  //뷰 초기화
-        btnSend = findViewById(R.id.btnSend)
-        edt = findViewById(R.id.edt)
-        recyclerView_chat = findViewById(R.id.recyclerview_chat)
-    }
-
-    fun initializeListener() { //버튼 클릭 시 리스너 초기화
-        btnSend.setOnClickListener() {
-            putMessage()
-        }
-    }
-
-    fun setupChatRooms() { //채팅방 목록 초기화 및 표시
-        if (chatRoomKey.isNullOrBlank())
-            setupChatRoomKey()
-        else
-            setupRecycler()
-    }
-
-    fun setupChatRoomKey() {  //chatRoomKey 없을 경우 초기화 후 목록 초기화
-        FirebaseDatabase.getInstance().getReference("ChatRoom").child("chatRooms")
-            .orderByChild("users/${opponentUser.userEmail}").equalTo(true)  //tkdeoqkddml Uid가 포함된 목록이 있는지 확인
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) { }
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for (data in snapshot.children) {
-                        chatRoomKey = data.key!!  //chatRoomKey 초기화
-                        setupRecycler()  //목록 업데이트
-                        break
-                    }
-                }
-
-            })
-    }
-
-    fun putMessage() {  //메세지 전송
-        try {
-            var message = com.example.github.data.Message(myUid, getDateTimeString(), edt.text.toString()) //메세지 정보 초기화
-            Log.i("ChatRoomKey", chatRoomKey)
-            FirebaseDatabase.getInstance().getReference("ChatRoom").child("chatRooms")
-                .child(chatRoomKey).child("messages")  //현재 채팅방에 메세지 추가
-                .push().setValue(message).addOnSuccessListener {
-                    Log.i("putMessage", "메세지 전송에 성공하였습니다.")
-                    edt.text.clear()
-                }.addOnCanceledListener {
-                    Log.i("putMessage", "메세지 전송에 실패하였습니다.")
-                }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.i("putMessage", "메시지 전송 중 오류가 발생하였습니다.")
-        }
-    }
-
-    fun getDateTimeString(): String {  //메세지 보낸 시각 정보 반환
-        try {
-            var localDateTime = LocalDateTime.now()
-            localDateTime.atZone(TimeZone.getDefault().toZoneId())
-            var dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
-            return localDateTime.format(dateTimeFormatter).toString()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw Exception("getTimeError")
-        }
-    }
-
-    fun setupRecycler() {  //목록 초기화 및 업데이트
-        recyclerView_chat.layoutManager = LinearLayoutManager(this)
-        recyclerView_chat.adapter = ChatAdapter(this, chatRoomKey, opponentUser.userEmail)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item?.itemId){
-            android.R.id.home -> {
-                //뒤로가기 눌렀을 때
-                finish()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-}*/

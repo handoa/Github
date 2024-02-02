@@ -50,8 +50,6 @@ class activity_myPage : AppCompatActivity() {
         info_userTel = findViewById(R.id.info_userTel)
 
         auth = Firebase.auth
-        //var user = FirebaseAuth.getInstance().currentUser?.uid
-        //uid = auth.currentUser.toString()
         uid = FirebaseAuth.getInstance().currentUser?.uid.toString()
         btnLogout = findViewById(R.id.btnLogout)
 
@@ -71,11 +69,8 @@ class activity_myPage : AppCompatActivity() {
                 // Failed to read value
                 Log.w(TAG, "Failed to read value.", error.toException())
             }
-        }) /*{
-            //info_userEmail = it.value as TextView
-            //Log.i("firevase", "Got value ${it.value}")
+        })
 
-        }*/
         //로그아웃 버튼 클릭 시 로그아웃 후 로그인 페이지로 이동
         btnLogout.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
@@ -98,21 +93,4 @@ class activity_myPage : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-   /* fun getUid(): String { //firebase에서 uid를 가져옴
-        return auth.currentUser?.uid.toString()
-    }*/
-
-    // database 읽기
-    /*myRef.addValueEventListener(object : ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            // This method is called once with the initial value and again
-            // whenever data at this location is updated.
-            val value = dataSnapshot.getValue<String>()
-            Log.d(TAG, "Value is: $value")
-        }
-        override fun onCancelled(error: DatabaseError) {
-            // Failed to read value
-            Log.w(TAG, "Failed to read value.", error.toException())
-        }
-    })*/
 }

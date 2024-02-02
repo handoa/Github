@@ -45,13 +45,6 @@ class SignupActivity : AppCompatActivity() {
 
         initializeView()
         initializeListener()
-
-        // Write a message to the database
-        /*val database = Firebase.database
-        val myRef = database.getReference("User")
-
-        myRef.setValue("Hello, World!")*/
-
     }
 
 
@@ -97,27 +90,6 @@ class SignupActivity : AppCompatActivity() {
         database.child("users").child(uid).setValue(user)
         com.example.github.data.userId.userid = userId
     }
-
-    /*fun signUp(email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) {task ->
-                if (task.isSuccessful) {
-                    //Firebase DB에 저장되어 있는 계정 아닐 경우 새로 등록
-                    goToLoginActivity(task.result?.user)
-                } else if (task.exception?.message.isNullOrEmpty()) {
-                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_LONG).show()
-                } else {
-                    //(id, password)
-                }
-            }
-    }
-
-    //회원가입 성공 시 로그인 화면으로 이동
-    fun goToLoginActivity(user: FirebaseUser?) {
-        if (user != null) {
-            startActivity(Intent(this, activity_login::class.java))
-        }
-    }*/
 
 }
 
