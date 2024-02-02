@@ -29,6 +29,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.github.network.DisplayImageActivity
@@ -46,7 +47,7 @@ import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var weatherView: Button
+    private lateinit var weatherlayout: ConstraintLayout
     lateinit var realtimeTalk: LinearLayout
     lateinit var toolbar: Toolbar
     lateinit var myCloset: ImageView
@@ -61,14 +62,14 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar) //액티비티의 앱바로 지정
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        weatherView = findViewById(R.id.weatherView)
+        weatherlayout = findViewById(R.id.weatherlayout)
         realtimeTalk = findViewById(R.id.realtimeTalk)
         myCloset = findViewById(R.id.imageView_myCloset)
         myCloset.clipToOutline = true
         ootd = findViewById(R.id.imageView_ootd)
 
         //날씨 정보 클릭 시 날씨화면으로 이동
-        weatherView.setOnClickListener {
+        weatherlayout.setOnClickListener {
             var intentToWeatherPage = Intent(this, MainActivity2::class.java)
             startActivity(intentToWeatherPage)
         }
